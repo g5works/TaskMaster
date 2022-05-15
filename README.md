@@ -1,24 +1,18 @@
-# taskmaster
+# TaskMaster III
+## Name: Star Dream
+![alt text](media/logo.svg)
+## A multiplatform application to help students get their school life in check. 
+### (By school life we mean things like assignments. This app cannot help you with issues with your friends)
 
-## Project setup
+### Compile Tauri app and start in Development Mode
 ```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
+yarn tauri:serve
 ```
 
-### Lints and fixes files
+### Compile the Tauri application to your current platform (Production Mode)
 ```
-yarn lint
+yarn tauri:build
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+<!-- ### Customize configuration -->
+<!-- See [Configuration Reference](https://cli.vuejs.org/config/). -->
