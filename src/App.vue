@@ -11,12 +11,14 @@
   </v-app>
 </template>
 
-<script lang="js">
+<script lang="ts">
 import Vue from 'vue';
 
+import * as tauri from "@tauri-apps/api"
+
+const win = tauri.window.appWindow
 
 
-const win = window.__TAURI__.window.appWindow
 
 
 
@@ -36,7 +38,7 @@ export default Vue.extend({
     mini: function() {win.minimize()}
   },
   mounted(){
-    window.__TAURI__.os.type().then((value) => {
+    tauri.os.type().then((value: string) => {
       if (value == "Linux"){
         this.nolinux = false;
       }

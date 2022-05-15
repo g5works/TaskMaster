@@ -16,3 +16,10 @@ new Vue({
   vuetify,
   render: h => h(App)
 }).$mount('#app')
+
+declare global {
+  interface Window {
+      OS: string;
+      __TAURI__: Record<string, unknown>;
+  }
+}
