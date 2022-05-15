@@ -1,0 +1,138 @@
+<template>
+  <div class="home">
+    <v-app-bar     
+      src="https://picsum.photos/1920/1080"
+      color="purple" app dark fixed dense expanded>
+
+      <v-app-bar-nav-icon v-on:click="navexpanded = !navexpanded"><v-icon>{{appbaricon}}</v-icon></v-app-bar-nav-icon>
+      <v-app-bar-title>TaskMaster</v-app-bar-title>
+      <v-spacer></v-spacer>
+      <v-menu>
+        <template v-slot:activator="{on, attribute}">
+          <v-btn icon v-bind="attribute" v-on="on">
+            <v-icon style="mix-blend-mode: difference;">mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item link>
+            <v-list-item-content>
+              <v-list-item-title>Settings</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item link>
+            <v-list-item-content>
+              <v-list-item-title>About TaskMaster 3</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+
+      </v-menu>
+      <v-divider vertical inset/>
+      <v-btn icon @click="recsexpanded = !recsexpanded">
+        <v-icon style="mix-blend-mode: difference;">mdi-format-list-numbered</v-icon>
+      </v-btn>
+    </v-app-bar>
+
+    <v-navigation-drawer v-model="navexpanded" color="purple" app>
+      <v-list dark>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title style="font-size: 20pt; font-weight: bold;" align="center">TaskMaster</v-list-item-title>
+            <v-list-item-subtitle align="center">Version 3 Alpha "Star Dream DA"</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+
+      <v-divider></v-divider>
+
+      <v-list dark nav dense>
+        <v-list-item link>
+          <v-list-item-icon><v-icon>mdi-calendar-plus</v-icon></v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Add new event</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    <v-navigation-drawer color="gray" app right width="450px" v-model="recsexpanded">
+      <v-list>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title align="center" style="font-size: 20pt; font-weight: bold">Recommendations</v-list-item-title>
+            <v-list-item-subtitle align="center">A list of assignments ordered by when you should do them</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+
+      <v-divider></v-divider>
+
+      <v-container fluid>
+
+        <v-card v-for="(item, index) in datas" class="mb-2" :key="index">
+          <v-sheet align="center" v-bind:color=item.color height="20" width="100%" style="font-size: 11pt;">{{item.type}}</v-sheet>
+          <v-card-title>{{item.name}}</v-card-title>
+          <v-card-subtitle>Notes:&nbsp;{{item.notes}}</v-card-subtitle>
+        </v-card>
+        
+
+      </v-container>
+    </v-navigation-drawer>
+
+
+    <v-main>
+      <v-container fluid>
+
+        <v-card v-for="(item, index) in datas" class="mb-2" :key="index">
+          <v-sheet align="center" v-bind:color=item.color height="20" width="100%" style="font-size: 11pt;">{{item.type}}</v-sheet>
+          <v-card-title>{{item.name}}</v-card-title>
+          <v-card-subtitle>Notes:&nbsp;{{item.notes}}</v-card-subtitle>
+        </v-card>
+        
+
+      </v-container>
+    </v-main>
+  </div>
+ 
+</template>
+
+
+
+
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
+  name: 'App',
+
+  data: function() {
+    return {
+      message: "renderer",
+      navexpanded: false,
+      recsexpanded: false,
+      appbaricon: "mdi-menu",
+      datas: [
+        {id:"identifier", name: "item one", notes: "this is an item that is in the list", type: 1, color: "green"}
+      ],
+    }
+  },
+
+  watch: {
+    navexpanded (val){
+      if (val){
+        this.appbaricon = "mdi-arrow-collapse-left"
+      }
+      else{
+        this.appbaricon = "mdi-menu"
+      }
+    }
+  },
+
+
+
+});
+
+</script>
+
+<style lang="scss">
+
+</style>
