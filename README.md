@@ -1,6 +1,5 @@
-# TaskMaster III
-## Name: Star Dream
-![alt text](media/logo.svg)
+![taskmaster dev logo](media/logo.svg)
+# TaskMaster III Star Dream
 ## A multiplatform application to help students get their school life in check. 
 ### (By school life we mean things like assignments. This app cannot help you with issues with your friends)
 
