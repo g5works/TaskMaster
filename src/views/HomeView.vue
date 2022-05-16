@@ -19,9 +19,9 @@
               <v-list-item-title>Settings</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item link>
+          <v-list-item link @click="$router.push('/about')">
             <v-list-item-content>
-              <v-list-item-title>About TaskMaster 3</v-list-item-title>
+              <v-list-item-title>About TaskMaster</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -87,9 +87,9 @@
           <v-card-title>{{item.name}}</v-card-title>
           <v-card-subtitle>Notes:&nbsp;{{item.notes}}</v-card-subtitle>
         </v-card>
-        
 
       </v-container>
+      
     </v-main>
   </div>
  

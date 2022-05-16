@@ -7,7 +7,9 @@
       <v-btn icon tile color="blue" @click="maxi"><v-icon style="margin:0px;" small>mdi-crop-square</v-icon></v-btn>
       <v-btn icon tile color="red" @click="close"><v-icon style="margin:0px;" small>mdi-close</v-icon></v-btn>      
     </v-system-bar>
-    <router-view/>
+    <transition name="fade" mode="out-in">
+      <router-view/>
+    </transition>
   </v-app>
 </template>
 
@@ -50,3 +52,17 @@ export default Vue.extend({
 });
 
 </script>
+
+<style>
+  .fade-enter-active,
+  .fade-leave-active {
+    transition-duration: 0.3s;
+    transition-property: opacity;
+    transition-timing-function: ease;
+  }
+
+  .fade-enter,
+  .fade-leave-active {
+    opacity: 0
+  }
+</style>
