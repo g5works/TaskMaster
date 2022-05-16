@@ -33,7 +33,7 @@
       </v-btn>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="navexpanded" color="purple" fixed>
+    <v-navigation-drawer v-model="navexpanded" color="purple" app>
       <v-list dark>
         <v-list-item>
           <v-list-item-content>
@@ -82,7 +82,7 @@
     <v-main>
       <v-container fluid>
 
-        <v-card v-click-outside="changeapp" v-for="(item, index) in datas" class="mb-2" :key="index">
+        <v-card v-for="(item, index) in datas" class="mb-2" :key="index">
           <v-sheet align="center" v-bind:color=item.color height="20" width="100%" style="font-size: 11pt;">{{item.type}}</v-sheet>
           <v-card-title>{{item.name}}</v-card-title>
           <v-card-subtitle>Notes:&nbsp;{{item.notes}}</v-card-subtitle>
