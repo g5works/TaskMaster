@@ -71,7 +71,7 @@
         <v-card v-for="(item, index) in datas" class="mb-2" :key="index">
           <v-sheet align="center" v-bind:color=item.color height="20" width="100%" style="font-size: 11pt;">{{item.type}}</v-sheet>
           <v-card-title>{{item.name}}</v-card-title>
-          <v-card-subtitle>Notes:&nbsp;{{item.notes}}</v-card-subtitle>
+          <v-card-subtitle>Due in:&nbsp;{{item.notes}}&nbsp;days</v-card-subtitle>
         </v-card>
         
 
@@ -141,6 +141,10 @@ export default Vue.extend({
       else{
         this.appbaricon = "mdi-menu"
       }
+    },
+
+    datas (val){
+      console.log(val)
     }
   },
 
@@ -149,7 +153,6 @@ export default Vue.extend({
       this.navexpanded = false
     }
   }
-
 });
 
 </script>
