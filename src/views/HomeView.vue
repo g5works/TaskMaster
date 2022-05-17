@@ -88,6 +88,10 @@
           <v-card-subtitle>Notes:&nbsp;{{item.notes}}</v-card-subtitle>
         </v-card>
 
+        <v-card>
+          hello
+        </v-card>
+
       </v-container>
       
     </v-main>
@@ -128,7 +132,7 @@ export default Vue.extend({
       recsexpanded: false,
       appbaricon: "mdi-menu",
       datas: [
-        {id:"identifier", name: "item one", notes: "this is an item that is in the list", type: 1, color: "green"}
+        // {id:"identifier", name: "item one", notes: "this is an item that is in the list", type: 1, color: "green"}
       ],
     }
   },
