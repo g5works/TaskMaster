@@ -41,7 +41,7 @@ export default Vue.extend({
   },
   mounted(){
     tauri.os.type().then((value: string) => {
-      if (value == "Linux"){
+      if (value == "Linux" || value == "Darwin"){
         this.nolinux = false;
       }
       else{
