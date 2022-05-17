@@ -88,9 +88,14 @@
           <v-card-subtitle>Notes:&nbsp;{{item.notes}}</v-card-subtitle>
         </v-card>
 
-        <v-card>
-          hello
-        </v-card>
+        <v-container fill-height>
+            <v-row justify="center" align="center">
+                <v-col cols="1200" sm="9">
+                  <v-text align="center" style="font-size: 40pt; font-weight: lighter; color: gray;">There are no events in the list</v-text><br>
+                  <v-card align="center" outlined>hello</v-card>
+                </v-col>
+            </v-row>
+        </v-container>
 
       </v-container>
       
