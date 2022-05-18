@@ -87,12 +87,18 @@
           <v-card-title>{{item.name}}</v-card-title>
           <v-card-subtitle>Notes:&nbsp;{{item.notes}}</v-card-subtitle>
         </v-card>
-
         <v-container fill-height>
             <v-row justify="center" align="center">
                 <v-col cols="1200" sm="9">
-                  <v-text align="center" style="font-size: 40pt; font-weight: lighter; color: gray;">There are no events in the list</v-text><br>
-                  <v-card align="center" outlined>hello</v-card>
+                  <p align="center" justify="center" style="font-size: 5vh;">Haven't added anything yet?</p>
+                  <v-card outlined class="pa-1" link>
+                    <v-card-title><v-icon>mdi-plus</v-icon>&nbsp;Add a new event</v-card-title>
+                  </v-card>
+                  <br>
+                  <v-card outlined class="pa-1" link>
+                    <v-card-title><v-icon>mdi-calendar-import</v-icon>&nbsp;Import an event file</v-card-title>
+                    
+                  </v-card>
                 </v-col>
             </v-row>
         </v-container>
@@ -135,6 +141,7 @@ export default Vue.extend({
       message: "renderer",
       navexpanded: false,
       recsexpanded: false,
+      notaskswindow: true,
       appbaricon: "mdi-menu",
       datas: [
         // {id:"identifier", name: "item one", notes: "this is an item that is in the list", type: 1, color: "green"}
