@@ -52,6 +52,12 @@
             <v-list-item-title>Add new event</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item link>
+          <v-list-item-icon><v-icon>mdi-calendar-import</v-icon></v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Import event</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-navigation-drawer color="gray" app right width="450px" v-model="recsexpanded">
@@ -91,9 +97,9 @@
             <v-row justify="center" align="center">
                 <v-col cols="1200" sm="9">
                   <p align="center" justify="center" style="font-size: 5vh;">Haven't added anything yet?</p>
-                  <p align="center" justify="center" style="font-size: 2vh; color: gray;">Here's some things you should try to do!</p>
+                  <p align="center" justify="center" style="font-size: 2vh; color: gray;">Here's some things you should do!</p>
                   <v-card outlined class="pa-1" link>
-                    <v-card-title><v-icon>mdi-plus</v-icon>&nbsp;Add a new event</v-card-title>
+                    <v-card-title><v-icon>mdi-calendar-plus</v-icon>&nbsp;Add a new event</v-card-title>
                   </v-card>
                   <br>
                   <v-card outlined class="pa-1" link>
