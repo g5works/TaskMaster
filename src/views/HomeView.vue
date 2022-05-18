@@ -91,6 +91,7 @@
             <v-row justify="center" align="center">
                 <v-col cols="1200" sm="9">
                   <p align="center" justify="center" style="font-size: 5vh;">Haven't added anything yet?</p>
+                  <p align="center" justify="center" style="font-size: 2vh; color: gray;">Here's some things you should try to do!</p>
                   <v-card outlined class="pa-1" link>
                     <v-card-title><v-icon>mdi-plus</v-icon>&nbsp;Add a new event</v-card-title>
                   </v-card>
