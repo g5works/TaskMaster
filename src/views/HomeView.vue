@@ -46,12 +46,13 @@
       <v-divider></v-divider>
 
       <v-list dark nav dense>
-        <v-list-item link>
+        <v-list-item link @click="addexpanded=true">
           <v-list-item-icon><v-icon>mdi-calendar-plus</v-icon></v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title>Add new event</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        
         <v-list-item link>
           <v-list-item-icon><v-icon>mdi-calendar-import</v-icon></v-list-item-icon>
           <v-list-item-content>
@@ -60,6 +61,66 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
+
+
+    <v-navigation-drawer v-model="addexpanded" color="purple" width="500" app temporary>
+
+      <v-list dark>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title style="font-size: 20pt; font-weight: bold;" align="center">Add new event</v-list-item-title>
+            <v-list-item-subtitle align="center">Place a new event in the list</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+
+      <v-divider></v-divider>
+
+      <v-container>
+        <v-text-field filled counter clearable clear-icon="mdi-eraser" label="Enter event name"></v-text-field>
+        <v-menu
+        ref="menu"
+        :close-on-content-click="false"
+        :return-value.sync="date"
+        transition="scale-transition"
+        offset-y
+        min-width="auto"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-text-field
+            v-model="date"
+            label="Pick a date"
+            prepend-icon="mdi-calendar"
+            filled
+            v-bind="attrs"
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-date-picker
+          v-model="date"
+          scrollable
+        >
+        <v-spacer></v-spacer>
+          <v-btn
+            text
+            color="primary"
+            @click="menu = false"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            text
+            color="primary"
+            @click= "$refs.menu.save(date)"
+          >
+            OK
+          </v-btn>
+        </v-date-picker>
+      </v-menu>
+      </v-container>
+    </v-navigation-drawer>
+
+
     <v-navigation-drawer color="gray" app right width="450px" v-model="recsexpanded">
       <v-list>
         <v-list-item>
@@ -98,7 +159,7 @@
                 <v-col cols="1200" sm="9">
                   <p align="center" justify="center" style="font-size: 5vh;">Haven't added anything yet?</p>
                   <p align="center" justify="center" style="font-size: 2vh; color: gray;">Here's some things you should do!</p>
-                  <v-card outlined class="pa-1" link>
+                  <v-card outlined class="pa-1" link @click="addexpanded=true">
                     <v-card-title><v-icon>mdi-calendar-plus</v-icon>&nbsp;Add a new event</v-card-title>
                   </v-card>
                   <br>
@@ -148,8 +209,11 @@ export default Vue.extend({
       message: "renderer",
       navexpanded: false,
       recsexpanded: false,
+      addexpanded: false,
       notaskswindow: true,
       appbaricon: "mdi-menu",
+      date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      menu: false,
       datas: [
         // {id:"identifier", name: "item one", notes: "this is an item that is in the list", type: 1, color: "green"}
       ],
@@ -173,7 +237,10 @@ export default Vue.extend({
 
   methods:{
     changeapp (){
-      this.navexpanded = false
+      if (this.addexpanded){
+        this.addexpanded = false
+      }
+
     }
   }
 });
