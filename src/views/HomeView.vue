@@ -46,7 +46,7 @@
       <v-divider></v-divider>
 
       <v-list dark nav dense>
-        <v-list-item link @click="addexpanded=true">
+        <v-list-item link @click="dialogopen=true">
           <v-list-item-icon><v-icon>mdi-calendar-plus</v-icon></v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title>Add new event</v-list-item-title>
@@ -77,7 +77,7 @@
       <v-divider></v-divider>
 
       <v-container>
-        <v-text-field filled counter clearable clear-icon="mdi-eraser" label="Enter event name"></v-text-field>
+        <v-text-field filled label="Enter event name"></v-text-field>
         <v-menu
         ref="menu"
         v-model="menu"
@@ -119,13 +119,14 @@
           </v-btn>
         </v-date-picker>
       </v-menu>
-        <v-btn-toggle mandatory style="width:100%;">
+        <v-btn-toggle mandatory style="width:100%;" background-color="purple" color="purple">
           <v-btn>Summative</v-btn>
           <v-btn>Formative</v-btn>
           <v-btn>Informative</v-btn>
-          <v-btn>Other</v-btn>
+          <v-btn>&nbsp;&nbsp;&nbsp;&nbsp;Other&nbsp;&nbsp;&nbsp;&nbsp;</v-btn>
         </v-btn-toggle>
-
+        <br><br>
+        <v-textarea filled counter label="Event Notes">hello</v-textarea>
       </v-container>
     </v-navigation-drawer>
 
@@ -163,14 +164,82 @@
           <v-card-title>{{item.name}}</v-card-title>
           <v-card-subtitle>Notes:&nbsp;{{item.notes}}</v-card-subtitle>
         </v-card>
+        
         <v-container fill-height>
             <v-row justify="center" align="center">
                 <v-col cols="1200" sm="9">
                   <p align="center" justify="center" style="font-size: 5vh;">Haven't added anything yet?</p>
                   <p align="center" justify="center" style="font-size: 3vh; color: gray;">Here's some things you should do!</p>
-                  <v-card outlined class="pa-1" link @click="addexpanded=true">
-                    <v-card-title><v-icon>mdi-calendar-plus</v-icon>&nbsp;Add a new event</v-card-title>
-                  </v-card>
+                  <v-dialog v-model="dialogopen" width="600">
+                    <template v-slot:activator="{on, attrs}">
+                      <v-card outlined class="pa-1" link v-bind="attrs" v-on="on">
+                        <v-card-title><v-icon>mdi-calendar-plus</v-icon>&nbsp;Add a new event</v-card-title>
+                      </v-card>
+                    </template>
+                    <v-card>
+                      <v-card-title background-color="purple" class="text-h4 purple">Add event</v-card-title>
+                      <v-container>
+                        <v-text-field filled label="Enter event name"></v-text-field>
+                        <v-menu
+                        ref="menu"
+                        v-model="menu"
+                        :close-on-content-click="false"
+                        :return-value.sync="date"
+                        transition="scroll-y-transition"
+                        offset-y
+                        min-width="auto"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                            v-model="date"
+                            label="Pick a date"
+                            prepend-icon="mdi-calendar"
+                            filled
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
+                          v-model="date"
+                          scrollable
+                        >
+                        <v-spacer></v-spacer>
+                          <v-btn
+                            text
+                            color="pink"
+                            @click="menu = false"
+                          >
+                            Cancel
+                          </v-btn>
+                          <v-btn
+                            text
+                            color="pink"
+                            @click= "$refs.menu.save(date)"
+                          >
+                            OK
+                          </v-btn>
+                        </v-date-picker>
+                      </v-menu>
+                        <v-btn-toggle mandatory style="width:100%;" color="purple">
+                          <v-btn>&nbsp;&nbsp;&nbsp;Summative&nbsp;&nbsp;&nbsp;</v-btn>
+                          <v-btn>&nbsp;&nbsp;&nbsp;Formative&nbsp;&nbsp;&nbsp;</v-btn>
+                          <v-btn>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Informative&nbsp;&nbsp;&nbsp;&nbsp;</v-btn>
+                          <v-btn>&nbsp;&nbsp;&nbsp;&nbsp;Other&nbsp;&nbsp;&nbsp;&nbsp;</v-btn>
+                        </v-btn-toggle>
+                        <br><br>
+                        <v-textarea filled counter label="Event Notes"></v-textarea>
+                        <v-spacer/>
+                        
+                      </v-container>
+                      <v-card-actions>
+                        <v-spacer/>
+                          <v-btn text color="purple" @click="dialogopen=false">Cancel</v-btn>
+                          <v-btn text color="purple">Create</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+
                   <br>
                   <v-card outlined class="pa-1" link>
                     <v-card-title><v-icon>mdi-calendar-import</v-icon>&nbsp;Import an event file</v-card-title>
@@ -221,6 +290,7 @@ export default Vue.extend({
       addexpanded: false,
       notaskswindow: true,
       appbaricon: "mdi-menu",
+      dialogopen: false,
       date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       menu: false,
       datas: [
