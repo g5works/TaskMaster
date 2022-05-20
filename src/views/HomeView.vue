@@ -63,7 +63,7 @@
     </v-navigation-drawer>
 
 
-    <v-navigation-drawer v-model="addexpanded" color="purple" width="500" app temporary>
+    <v-navigation-drawer v-model="addexpanded" color="purple" width="500" app temporary>  
 
       <v-list dark>
         <v-list-item>
@@ -80,9 +80,10 @@
         <v-text-field filled counter clearable clear-icon="mdi-eraser" label="Enter event name"></v-text-field>
         <v-menu
         ref="menu"
+        v-model="menu"
         :close-on-content-click="false"
         :return-value.sync="date"
-        transition="scale-transition"
+        transition="scroll-y-transition"
         offset-y
         min-width="auto"
       >
@@ -92,6 +93,7 @@
             label="Pick a date"
             prepend-icon="mdi-calendar"
             filled
+            readonly
             v-bind="attrs"
             v-on="on"
           ></v-text-field>
@@ -103,20 +105,27 @@
         <v-spacer></v-spacer>
           <v-btn
             text
-            color="primary"
+            color="pink"
             @click="menu = false"
           >
             Cancel
           </v-btn>
           <v-btn
             text
-            color="primary"
+            color="pink"
             @click= "$refs.menu.save(date)"
           >
             OK
           </v-btn>
         </v-date-picker>
       </v-menu>
+        <v-btn-toggle mandatory style="width:100%;">
+          <v-btn>Summative</v-btn>
+          <v-btn>Formative</v-btn>
+          <v-btn>Informative</v-btn>
+          <v-btn>Other</v-btn>
+        </v-btn-toggle>
+
       </v-container>
     </v-navigation-drawer>
 
@@ -158,7 +167,7 @@
             <v-row justify="center" align="center">
                 <v-col cols="1200" sm="9">
                   <p align="center" justify="center" style="font-size: 5vh;">Haven't added anything yet?</p>
-                  <p align="center" justify="center" style="font-size: 2vh; color: gray;">Here's some things you should do!</p>
+                  <p align="center" justify="center" style="font-size: 3vh; color: gray;">Here's some things you should do!</p>
                   <v-card outlined class="pa-1" link @click="addexpanded=true">
                     <v-card-title><v-icon>mdi-calendar-plus</v-icon>&nbsp;Add a new event</v-card-title>
                   </v-card>
