@@ -168,14 +168,26 @@
         <v-container fill-height>
             <v-row justify="center" align="center">
                 <v-col cols="1200" sm="9">
-                  <p align="center" justify="center" style="font-size: 5vh;">Haven't added anything yet?</p>
-                  <p align="center" justify="center" style="font-size: 3vh; color: gray;">Here's some things you should do!</p>
+
+                  <div v-if="notaskswindow">                  
+                    <p align="center" justify="center" style="font-size: 5vh;">Haven't added anything yet?</p>
+                    <p align="center" justify="center" style="font-size: 3vh; color: gray;">Here's some things you should do!</p>
+                    
+                    <v-card outlined class="pa-1" link @click="dialogopen = true">
+                      <v-card-title ><v-icon>mdi-calendar-plus</v-icon>&nbsp;Add a new event</v-card-title>  
+                    </v-card>
+                    <br>
+                    <v-card outlined class="pa-1" link>
+                      <v-card-title><v-icon>mdi-calendar-import</v-icon>&nbsp;Import an event file</v-card-title>
+                      
+                    </v-card>
+                    <br>
+                    <v-card outlined class="pa-1" link @click="pushtoarray">
+                      <v-card-title><v-icon>mdi-plus</v-icon>&nbsp;Add a new array item</v-card-title>
+                    </v-card>
+                  </div>
+
                   <v-dialog v-model="dialogopen" width="600">
-                    <template v-slot:activator="{on, attrs}">
-                      <v-card outlined class="pa-1" link v-bind="attrs" v-on="on">
-                        <v-card-title><v-icon>mdi-calendar-plus</v-icon>&nbsp;Add a new event</v-card-title>
-                      </v-card>
-                    </template>
                     <v-card>
                       <v-card-title background-color="purple" class="text-h4 purple">Add event</v-card-title>
                       <v-container>
@@ -240,11 +252,6 @@
                     </v-card>
                   </v-dialog>
 
-                  <br>
-                  <v-card outlined class="pa-1" link>
-                    <v-card-title><v-icon>mdi-calendar-import</v-icon>&nbsp;Import an event file</v-card-title>
-                    
-                  </v-card>
                 </v-col>
             </v-row>
         </v-container>
@@ -259,23 +266,23 @@
 
 
 
-<script lang="ts">
+<script lang="js">
 import Vue from 'vue';
 
 Vue.directive('click-outside', {
   bind: function (el, binding, vnode) {
-    (el as any).clickOutsideEvent = function (event: MouseEvent) {
+    el.clickOutsideEvent = function (event) {
       console.log(event)
       // here I check that click was outside the el and his children
-      if (!(el == event.target || el.contains((event as any).target))) {
+      if (!(el == event.target || el.contains(event.target))) {
         // and if it did, call method provided in attribute value
-        (vnode as any).context[(binding as any).expression](event);
+        vnode.context[binding.expression](event);
       }
     };
-    document.body.addEventListener('click', (el as any).clickOutsideEvent)
+    document.body.addEventListener('click', el.clickOutsideEvent)
   },
   unbind: function (el) {
-    document.body.removeEventListener('click', (el as any).clickOutsideEvent)
+    document.body.removeEventListener('click', el.clickOutsideEvent)
   },
 });
 
@@ -310,7 +317,7 @@ export default Vue.extend({
     },
 
     datas (val){
-      console.log(val)
+      this.notaskswindow = false;
     }
   },
 
@@ -319,7 +326,9 @@ export default Vue.extend({
       if (this.addexpanded){
         this.addexpanded = false
       }
-
+    },
+    pushtoarray(){
+      this.datas.push({id:"identifier", name: "item one", notes: "this is an item that is in the list", type: 1, color: "green"});
     }
   }
 });
