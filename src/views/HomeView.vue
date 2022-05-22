@@ -200,6 +200,7 @@
 <script lang="js">
 import Vue from 'vue';
 import events from "../../json/user.json";
+import * as tauri from "@tauri-apps/api"
 
 
 Vue.directive('click-outside', {
@@ -237,7 +238,7 @@ export default Vue.extend({
       menu: false,
       datas: events,
     }
-  },https://www.youtube.com/watch?v=m66TQzsIj2chttps://www.youtube.com/watch?v=m66TQzsIj2c
+  },
 
   watch: {
     navexpanded (val){
@@ -266,6 +267,7 @@ export default Vue.extend({
     pushtojson(){
       var jsoned = JSON.stringify(this.datas)
       console.log(jsoned)
+      console.log(tauri)
     }
   }
 });
