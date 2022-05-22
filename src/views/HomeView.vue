@@ -113,7 +113,7 @@
                       
                     </v-card>
                     <br>
-                    <v-card outlined class="pa-1" link @click="pushtoarray">
+                    <v-card outlined class="pa-1" link @click="() => {pushtoarray(), pushtojson()}">
                       <v-card-title><v-icon>mdi-plus</v-icon>&nbsp;Add a new test array item (DEV)</v-card-title>
                     </v-card>
                   </div>
@@ -237,7 +237,7 @@ export default Vue.extend({
       menu: false,
       datas: events,
     }
-  },
+  },https://www.youtube.com/watch?v=m66TQzsIj2chttps://www.youtube.com/watch?v=m66TQzsIj2c
 
   watch: {
     navexpanded (val){
@@ -262,6 +262,10 @@ export default Vue.extend({
     },
     pushtoarray(){
       this.datas.push({id:"identifier", name: "item one", notes: "this is an item that is in the list", type: 1, color: "green"});
+    },
+    pushtojson(){
+      var jsoned = JSON.stringify(this.datas)
+      console.log(jsoned)
     }
   }
 });
