@@ -62,75 +62,6 @@
       </v-list>
     </v-navigation-drawer>
 
-
-    <v-navigation-drawer v-model="addexpanded" color="purple" width="500" app temporary>  
-
-      <v-list dark>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title style="font-size: 20pt; font-weight: bold;" align="center">Add new event</v-list-item-title>
-            <v-list-item-subtitle align="center">Place a new event in the list</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-
-      <v-divider></v-divider>
-
-      <v-container>
-        <v-text-field filled label="Enter event name"></v-text-field>
-        <v-menu
-        ref="menu"
-        v-model="menu"
-        :close-on-content-click="false"
-        :return-value.sync="date"
-        transition="scroll-y-transition"
-        offset-y
-        min-width="auto"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-text-field
-            v-model="date"
-            label="Pick a date"
-            prepend-icon="mdi-calendar"
-            filled
-            readonly
-            v-bind="attrs"
-            v-on="on"
-          ></v-text-field>
-        </template>
-        <v-date-picker
-          v-model="date"
-          scrollable
-        >
-        <v-spacer></v-spacer>
-          <v-btn
-            text
-            color="pink"
-            @click="menu = false"
-          >
-            Cancel
-          </v-btn>
-          <v-btn
-            text
-            color="pink"
-            @click= "$refs.menu.save(date)"
-          >
-            OK
-          </v-btn>
-        </v-date-picker>
-      </v-menu>
-        <v-btn-toggle mandatory style="width:100%;" background-color="purple" color="purple">
-          <v-btn>Summative</v-btn>
-          <v-btn>Formative</v-btn>
-          <v-btn>Informative</v-btn>
-          <v-btn>&nbsp;&nbsp;&nbsp;&nbsp;Other&nbsp;&nbsp;&nbsp;&nbsp;</v-btn>
-        </v-btn-toggle>
-        <br><br>
-        <v-textarea filled counter label="Event Notes">hello</v-textarea>
-      </v-container>
-    </v-navigation-drawer>
-
-
     <v-navigation-drawer color="gray" app right width="450px" v-model="recsexpanded">
       <v-list>
         <v-list-item>
@@ -183,7 +114,7 @@
                     </v-card>
                     <br>
                     <v-card outlined class="pa-1" link @click="pushtoarray">
-                      <v-card-title><v-icon>mdi-plus</v-icon>&nbsp;Add a new array item</v-card-title>
+                      <v-card-title><v-icon>mdi-plus</v-icon>&nbsp;Add a new test array item (DEV)</v-card-title>
                     </v-card>
                   </div>
 
@@ -268,6 +199,8 @@
 
 <script lang="js">
 import Vue from 'vue';
+import events from "../../json/user.json";
+
 
 Vue.directive('click-outside', {
   bind: function (el, binding, vnode) {
@@ -289,6 +222,8 @@ Vue.directive('click-outside', {
 export default Vue.extend({
   name: 'App',
 
+
+
   data: function() {
     return {
       message: "renderer",
@@ -300,9 +235,7 @@ export default Vue.extend({
       dialogopen: false,
       date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       menu: false,
-      datas: [
-        // {id:"identifier", name: "item one", notes: "this is an item that is in the list", type: 1, color: "green"}
-      ],
+      datas: events,
     }
   },
 
