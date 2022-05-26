@@ -54,9 +54,14 @@
       },
       
       "fs": {
+        "scope": ["$DOCUMENT/*"],
         "readFile": true,
         "writeFile": true,
-        "readDir": true
+        "readDir": true,
+        "createDir": true    
+      },
+      "path": {
+        "all": true
       }
     },
     "windows": [

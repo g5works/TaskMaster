@@ -199,9 +199,7 @@
 
 <script lang="js">
 import Vue from 'vue';
-import events from "../../json/user.json";
 import * as tauri from "@tauri-apps/api"
-
 
 Vue.directive('click-outside', {
   bind: function (el, binding, vnode) {
@@ -236,7 +234,7 @@ export default Vue.extend({
       dialogopen: false,
       date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       menu: false,
-      datas: events,
+      datas: "",
     }
   },
 
@@ -251,7 +249,10 @@ export default Vue.extend({
     },
 
     datas (val){
-      this.notaskswindow = false;
+      if (val.length > 10){
+        this.notaskswindow = false;
+      }
+
     }
   },
 
@@ -266,9 +267,17 @@ export default Vue.extend({
     },
     pushtojson(){
       var jsoned = JSON.stringify(this.datas)
-      console.log(jsoned)
-      console.log(tauri)
+      tauri.fs.createDir("TaskMasterData", {dir: tauri.fs.BaseDirectory.Document})
+      tauri.fs.writeFile({contents: jsoned, path: "TaskMasterData/user.json"}, {dir: tauri.fs.BaseDirectory.Document})
+      
     }
+  },
+  mounted() {
+    tauri.fs.readTextFile("TaskMasterData/user.json", {dir: tauri.fs.BaseDirectory.Document}).then((val) => {
+      var jsonc = JSON.parse(val)
+      console.log(jsonc)
+      this.datas = jsonc
+    })
   }
 });
 
