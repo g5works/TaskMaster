@@ -110,11 +110,6 @@
                     <br>
                     <v-card outlined class="pa-1" link>
                       <v-card-title><v-icon>mdi-calendar-import</v-icon>&nbsp;Import an event file</v-card-title>
-                      
-                    </v-card>
-                    <br>
-                    <v-card outlined class="pa-1" link @click="() => {pushtoarray(), pushtojson()}">
-                      <v-card-title><v-icon>mdi-plus</v-icon>&nbsp;Add a new test array item (DEV)</v-card-title>
                     </v-card>
                   </div>
 
@@ -122,7 +117,7 @@
                     <v-card>
                       <v-card-title background-color="purple" class="text-h4 purple">Add event</v-card-title>
                       <v-container>
-                        <v-text-field filled label="Enter event name"></v-text-field>
+                        <v-text-field filled label="Enter event name" v-model="eventname"></v-text-field>
                         <v-menu
                         ref="menu"
                         v-model="menu"
@@ -164,21 +159,21 @@
                           </v-btn>
                         </v-date-picker>
                       </v-menu>
-                        <v-btn-toggle mandatory style="width:100%;" color="purple">
+                        <v-btn-toggle mandatory style="width:100%;" color="purple" v-model="type" @click="()=>{console.log(type)}">
                           <v-btn>&nbsp;&nbsp;&nbsp;Summative&nbsp;&nbsp;&nbsp;</v-btn>
                           <v-btn>&nbsp;&nbsp;&nbsp;Formative&nbsp;&nbsp;&nbsp;</v-btn>
                           <v-btn>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Informative&nbsp;&nbsp;&nbsp;&nbsp;</v-btn>
                           <v-btn>&nbsp;&nbsp;&nbsp;&nbsp;Other&nbsp;&nbsp;&nbsp;&nbsp;</v-btn>
                         </v-btn-toggle>
                         <br><br>
-                        <v-textarea filled counter label="Event Notes"></v-textarea>
+                        <v-textarea filled counter label="Event Notes" v-model="notes"></v-textarea>
                         <v-spacer/>
                         
                       </v-container>
                       <v-card-actions>
                         <v-spacer/>
                           <v-btn text color="purple" @click="dialogopen=false">Cancel</v-btn>
-                          <v-btn text color="purple">Create</v-btn>
+                          <v-btn text color="purple" @click="() => {pushtoarray(), pushtojson(), dialogopen=false}">Create</v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -232,9 +227,14 @@ export default Vue.extend({
       notaskswindow: true,
       appbaricon: "mdi-menu",
       dialogopen: false,
-      date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       menu: false,
-      datas: "",
+      datas: undefined,
+
+
+      eventname: undefined,
+      date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      notes: undefined,
+      type: undefined,
     }
   },
 
@@ -249,10 +249,7 @@ export default Vue.extend({
     },
 
     datas (val){
-      if (val.length > 10){
-        this.notaskswindow = false;
-      }
-
+      if (val.length > 0){this.notaskswindow = false;}
     }
   },
 
@@ -263,7 +260,7 @@ export default Vue.extend({
       }
     },
     pushtoarray(){
-      this.datas.push({id:"identifier", name: "item one", notes: "this is an item that is in the list", type: 1, color: "green"});
+      this.datas.push({id:"identifier", name: this.eventname, notes: this.notes, type: 1, color: "green"});
     },
     pushtojson(){
       var jsoned = JSON.stringify(this.datas)
@@ -278,6 +275,10 @@ export default Vue.extend({
       console.log(jsonc)
       this.datas = jsonc
     })
+
+    if(this.datas.length == 0 || this.datas.length == null){
+      this.notaskswindow = true;
+    }
   }
 });
 
