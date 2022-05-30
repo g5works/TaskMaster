@@ -160,7 +160,7 @@
                         </v-date-picker>
                       </v-menu>
                         <v-btn-toggle mandatory style="width:100%;" color="purple" v-model="type" @click="()=>{console.log(type)}">
-                          <v-btn>&nbsp;&nbsp;&nbsp;Summative&nbsp;&nbsp;&nbsp;</v-btn>
+                          <v-btn :value="Summative">&nbsp;&nbsp;&nbsp;Summative&nbsp;&nbsp;&nbsp;</v-btn>
                           <v-btn>&nbsp;&nbsp;&nbsp;Formative&nbsp;&nbsp;&nbsp;</v-btn>
                           <v-btn>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Informative&nbsp;&nbsp;&nbsp;&nbsp;</v-btn>
                           <v-btn>&nbsp;&nbsp;&nbsp;&nbsp;Other&nbsp;&nbsp;&nbsp;&nbsp;</v-btn>
@@ -260,13 +260,12 @@ export default Vue.extend({
       }
     },
     pushtoarray(){
-      this.datas.push({id:"identifier", name: this.eventname, notes: this.notes, type: 1, color: "green"});
+      this.datas.push({id:"identifier", name: this.eventname, notes: this.notes, type: this.type, color: "green"});
     },
     pushtojson(){
       var jsoned = JSON.stringify(this.datas)
       tauri.fs.createDir("TaskMasterData", {dir: tauri.fs.BaseDirectory.Document})
-      tauri.fs.writeFile({contents: jsoned, path: "TaskMasterData/user.json"}, {dir: tauri.fs.BaseDirectory.Document})
-      
+      tauri.fs.writeFile({contents: jsoned, path: "TaskMasterData/user.json"}, {dir: tauri.fs.BaseDirectory.Document})      
     }
   },
   mounted() {
@@ -275,10 +274,6 @@ export default Vue.extend({
       console.log(jsonc)
       this.datas = jsonc
     })
-
-    if(this.datas.length == 0 || this.datas.length == null){
-      this.notaskswindow = true;
-    }
   }
 });
 
