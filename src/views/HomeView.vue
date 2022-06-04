@@ -79,7 +79,7 @@
         <v-card v-for="(item, index) in datas" class="mb-2" :key="index">
           <v-sheet align="center" :color="setcolor(index)" height="20" width="100%" style="font-size: 11pt;">{{setname(index)}}</v-sheet>
           <v-card-title>{{item.name}}</v-card-title>
-          <v-card-subtitle>Due in:&nbsp;{{duein()}}&nbsp;days</v-card-subtitle>
+          <v-card-subtitle>Due in:&nbsp;{{updateduein(index)}}&nbsp;days</v-card-subtitle>
         </v-card>
         
 
@@ -229,7 +229,6 @@ export default Vue.extend({
       dialogopen: false,
       menu: false,
       datas: undefined,
-      currentday: undefined,
 
 
       eventname: undefined,
@@ -296,21 +295,21 @@ export default Vue.extend({
         return "orange"
       }
     },
-    duein(){
-      var today = undefined
-      setInterval(()=>{
-        today = new Date()
-        console.log(today)
-        return today
-      }, 1)
+    updateduein(index){
+      var today = new Date()
+      var setdate = new Date(this.datas[index].date)
+
+      var diff = (setdate.getTime()-today.getTime())/86400000
+      
+      return Math.ceil(diff)
     }
+
   },
   mounted() {
     tauri.fs.readTextFile("TaskMasterData/user.json", {dir: tauri.fs.BaseDirectory.Document}).then((val) => {
       var jsonc = JSON.parse(val)
       this.datas = jsonc
     })
-    
   }
 });
 
