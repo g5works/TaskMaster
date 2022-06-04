@@ -77,7 +77,7 @@
       <v-container fluid>
 
         <v-card v-for="(item, index) in datas" class="mb-2" :key="index">
-          <v-sheet align="center" v-bind:color=item.color height="20" width="100%" style="font-size: 11pt;">{{item.type}}</v-sheet>
+          <v-sheet align="center" v-bind:color=item.color height="20" width="100%" style="font-size: 11pt;">{{setname(index)}}</v-sheet>
           <v-card-title>{{item.name}}</v-card-title>
           <v-card-subtitle>Due in:&nbsp;{{item.notes}}&nbsp;days</v-card-subtitle>
         </v-card>
@@ -91,7 +91,7 @@
       <v-container fluid>
 
         <v-card v-for="(item, index) in datas" class="mb-2" :key="index">
-          <v-sheet align="center" v-bind:color=item.color height="20" width="100%" style="font-size: 11pt;">{{item.type}}</v-sheet>
+          <v-sheet align="center" :color="setcolor(index)" height="20" width="100%" style="font-size: 11pt;">{{setname(index)}}</v-sheet>
           <v-card-title>{{item.name}}</v-card-title>
           <v-card-subtitle>Notes:&nbsp;{{item.notes}}</v-card-subtitle>
         </v-card>
@@ -260,20 +260,54 @@ export default Vue.extend({
       }
     },
     pushtoarray(){
-      this.datas.push({id:"identifier", name: this.eventname, notes: this.notes, type: this.type, color: "green"});
+      this.datas.push({id:"identifier", name: this.eventname, notes: this.notes, type: this.type+1, color: "green"});
     },
     pushtojson(){
       var jsoned = JSON.stringify(this.datas)
       tauri.fs.createDir("TaskMasterData", {dir: tauri.fs.BaseDirectory.Document})
       tauri.fs.writeFile({contents: jsoned, path: "TaskMasterData/user.json"}, {dir: tauri.fs.BaseDirectory.Document})      
+    },
+    setname(index){
+      if (this.datas[index].type == 1){
+        return "Summative"
+      }
+      else if (this.datas[index].type == 2){
+        return "Formative"
+      }
+      else if (this.datas[index].type == 3){
+        return "Informative"
+      }
+      else {
+        return "Other"
+      }
+    },
+    setcolor(index){
+      if (this.datas[index].type == 1){
+        return "red"
+      }
+      else if (this.datas[index].type == 2){
+        return "blue"
+      }
+      else if (this.datas[index].type == 3){
+        return "green"
+      }
+      else {
+        return "orange"
+      }
+    },
+    shootinterval(){
+      setInterval(()=>{
+        var today = new Date();
+        console.log(today.getFullYear())
+      }, 10000)
     }
   },
   mounted() {
     tauri.fs.readTextFile("TaskMasterData/user.json", {dir: tauri.fs.BaseDirectory.Document}).then((val) => {
       var jsonc = JSON.parse(val)
-      console.log(jsonc)
       this.datas = jsonc
-    })
+    }),
+    this.shootinterval()
   }
 });
 
