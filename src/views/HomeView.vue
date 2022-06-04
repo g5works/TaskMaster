@@ -77,9 +77,9 @@
       <v-container fluid>
 
         <v-card v-for="(item, index) in datas" class="mb-2" :key="index">
-          <v-sheet align="center" v-bind:color=item.color height="20" width="100%" style="font-size: 11pt;">{{setname(index)}}</v-sheet>
+          <v-sheet align="center" :color="setcolor(index)" height="20" width="100%" style="font-size: 11pt;">{{setname(index)}}</v-sheet>
           <v-card-title>{{item.name}}</v-card-title>
-          <v-card-subtitle>Due in:&nbsp;{{item.notes}}&nbsp;days</v-card-subtitle>
+          <v-card-subtitle>Due in:&nbsp;{{duein()}}&nbsp;days</v-card-subtitle>
         </v-card>
         
 
@@ -160,7 +160,7 @@
                         </v-date-picker>
                       </v-menu>
                         <v-btn-toggle mandatory style="width:100%;" color="purple" v-model="type" @click="()=>{console.log(type)}">
-                          <v-btn :value="Summative">&nbsp;&nbsp;&nbsp;Summative&nbsp;&nbsp;&nbsp;</v-btn>
+                          <v-btn>&nbsp;&nbsp;&nbsp;Summative&nbsp;&nbsp;&nbsp;</v-btn>
                           <v-btn>&nbsp;&nbsp;&nbsp;Formative&nbsp;&nbsp;&nbsp;</v-btn>
                           <v-btn>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Informative&nbsp;&nbsp;&nbsp;&nbsp;</v-btn>
                           <v-btn>&nbsp;&nbsp;&nbsp;&nbsp;Other&nbsp;&nbsp;&nbsp;&nbsp;</v-btn>
@@ -229,6 +229,7 @@ export default Vue.extend({
       dialogopen: false,
       menu: false,
       datas: undefined,
+      currentday: undefined,
 
 
       eventname: undefined,
@@ -260,7 +261,7 @@ export default Vue.extend({
       }
     },
     pushtoarray(){
-      this.datas.push({id:"identifier", name: this.eventname, notes: this.notes, type: this.type+1, color: "green"});
+      this.datas.push({id:"identifier", name: this.eventname, notes: this.notes, type: this.type+1, date: this.date});
     },
     pushtojson(){
       var jsoned = JSON.stringify(this.datas)
@@ -295,19 +296,21 @@ export default Vue.extend({
         return "orange"
       }
     },
-    shootinterval(){
+    duein(){
+      var today = undefined
       setInterval(()=>{
-        var today = new Date();
-        console.log(today.getFullYear())
-      }, 10000)
+        today = new Date()
+        console.log(today)
+        return today
+      }, 1)
     }
   },
   mounted() {
     tauri.fs.readTextFile("TaskMasterData/user.json", {dir: tauri.fs.BaseDirectory.Document}).then((val) => {
       var jsonc = JSON.parse(val)
       this.datas = jsonc
-    }),
-    this.shootinterval()
+    })
+    
   }
 });
 
