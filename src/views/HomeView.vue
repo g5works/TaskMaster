@@ -28,7 +28,7 @@
 
       </v-menu>
       <v-divider vertical inset/>
-      <v-btn icon @click="recsexpanded = !recsexpanded">
+      <v-btn icon @click="recslock()">
         <v-icon style="mix-blend-mode: difference;">mdi-format-list-numbered</v-icon>
       </v-btn>
     </v-app-bar>
@@ -73,7 +73,6 @@
       </v-list>
 
       <v-divider></v-divider>
-
       <v-container fluid>
 
         <v-card v-for="(item, index) in datas" class="mb-2" :key="index">
@@ -185,6 +184,12 @@
       </v-container>
       
     </v-main>
+    <v-snackbar v-model="norecs" rounded="pill">
+      Recommendations will only become available once you add an event
+      <template v-slot:action="attrs">
+        <v-btn v-bind="attrs" icon color="red" @click="norecs=false"><v-icon>mdi-close</v-icon></v-btn>
+      </template>
+    </v-snackbar>
   </div>
  
 </template>
@@ -223,6 +228,7 @@ export default Vue.extend({
       message: "renderer",
       navexpanded: false,
       recsexpanded: false,
+      norecs: false,
       addexpanded: false,
       notaskswindow: true,
       appbaricon: "mdi-menu",
@@ -298,10 +304,20 @@ export default Vue.extend({
     updateduein(index){
       var today = new Date()
       var setdate = new Date(this.datas[index].date)
+      console.log(setdate)
 
       var diff = (setdate.getTime()-today.getTime())/86400000
       
       return Math.ceil(diff)
+    },
+
+    recslock(){
+      if (this.notaskswindow){
+        this.norecs = true
+      }
+      else{
+        this.recsexpanded = !this.recsexpanded
+      }
     }
 
   },
