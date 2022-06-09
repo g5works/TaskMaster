@@ -62,7 +62,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-navigation-drawer color="gray" app right width="450px" v-model="recsexpanded">
+    <v-navigation-drawer color="gray" app right width="450px" :disable-resize-watcher="notaskswindow" v-model="recsexpanded">
       <v-list>
         <v-list-item>
           <v-list-item-content>
@@ -76,9 +76,10 @@
       <v-container fluid>
 
         <v-card v-for="(item, index) in datas" class="mb-2" :key="index">
-          <v-sheet align="center" :color="setcolor(index)" height="20" width="100%" style="font-size: 11pt;">{{setname(index)}}</v-sheet>
+          <v-sheet dark align="center" :color="setcolor(index)" height="20" width="50%" style="font-size: 11pt;" class="d-inline-block rounded-tr-0">{{setname(index)}}</v-sheet>
+          <v-sheet dark align="center" :color="updateduein(index)[1]" height="20" width="50%" style="font-size:11pt;" class="d-inline-block rounded-tr">{{updateduein(index)[0]}}</v-sheet>
           <v-card-title>{{item.name}}</v-card-title>
-          <v-card-subtitle>Due in:&nbsp;{{updateduein(index)}}&nbsp;days</v-card-subtitle>
+          <v-card-subtitle>Due date:&nbsp;{{item.date}}</v-card-subtitle>
         </v-card>
         
 
@@ -90,7 +91,7 @@
       <v-container fluid>
 
         <v-card v-for="(item, index) in datas" class="mb-2" :key="index">
-          <v-sheet align="center" :color="setcolor(index)" height="20" width="100%" style="font-size: 11pt;">{{setname(index)}}</v-sheet>
+          <v-sheet dark align="center" :color="setcolor(index)" height="20" width="100%" style="font-size: 11pt;">{{setname(index)}}</v-sheet>
           <v-card-title>{{item.name}}</v-card-title>
           <v-card-subtitle>Notes:&nbsp;{{item.notes}}</v-card-subtitle>
         </v-card>
@@ -114,7 +115,7 @@
 
                   <v-dialog v-model="dialogopen" width="600">
                     <v-card>
-                      <v-card-title background-color="purple" class="text-h4 purple">Add event</v-card-title>
+                      <v-card-title background-color="purple" class="text-h4 purple" style="color:white;">Add event</v-card-title>
                       <v-container>
                         <v-text-field filled label="Enter event name" v-model="eventname"></v-text-field>
                         <v-menu
@@ -259,6 +260,20 @@ export default Vue.extend({
     }
   },
 
+  computed: {
+    sortedArray: function() {
+      function compare(a, b) {
+        if (a.name < b.name)
+          return -1;
+        if (a.name > b.name)
+          return 1;
+        return 0;
+      }
+
+      return this.datas.sort(compare);
+    }
+  },
+
   methods:{
     changeapp (){
       if (this.addexpanded){
@@ -289,16 +304,16 @@ export default Vue.extend({
     },
     setcolor(index){
       if (this.datas[index].type == 1){
-        return "red"
+        return "deep-purple"
       }
       else if (this.datas[index].type == 2){
-        return "blue"
+        return "indigo"
       }
       else if (this.datas[index].type == 3){
-        return "green"
+        return "blue"
       }
       else {
-        return "orange"
+        return "deep-orange"
       }
     },
     updateduein(index){
@@ -308,7 +323,15 @@ export default Vue.extend({
 
       var diff = (setdate.getTime()-today.getTime())/86400000
       
-      return Math.ceil(diff)
+      if (Math.ceil(diff) > 0){
+        return [`Due in ${Math.ceil(diff)} day(s)`, 'green']
+      }
+      else if (Math.ceil(diff) == 0){
+        return [`Due today`, 'orange']
+      }
+      else{
+        return [`Overdue by ${Math.abs(Math.ceil(diff))} day(s)`, 'red']
+      }
     },
 
     recslock(){
