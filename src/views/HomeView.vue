@@ -173,7 +173,7 @@
                       <v-card-actions>
                         <v-spacer/>
                           <v-btn text color="purple" @click="dialogopen=false">Cancel</v-btn>
-                          <v-btn text color="purple" @click="() => {pushtoarray(), pushtojson(), dialogopen=false}">Create</v-btn>
+                          <v-btn text color="purple" @click="() => {pushtoarray(), pushtojson(), dialogopen=false, consolelogging()}">Create</v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -260,32 +260,23 @@ export default Vue.extend({
     }
   },
 
-  computed: {
-    sortedArray: function() {
-      function compare(a, b) {
-        if (a.name < b.name)
-          return -1;
-        if (a.name > b.name)
-          return 1;
-        return 0;
-      }
-
-      return this.datas.sort(compare);
-    }
-  },
-
   methods:{
+    consolelogging(){
+      console.log(this.sortedarray)
+    },
     changeapp (){
       if (this.addexpanded){
         this.addexpanded = false
       }
+      
     },
+    
     pushtoarray(){
       this.datas.push({id:"identifier", name: this.eventname, notes: this.notes, type: this.type+1, date: this.date});
     },
     pushtojson(){
       var jsoned = JSON.stringify(this.datas)
-      tauri.fs.createDir("TaskMasterData", {dir: tauri.fs.BaseDirectory.Document})
+      tauri.fs.createDir("TaskMasterData", {dir: tauri.fs.BaseDirectory.Document}).catch(err => console.log('The json file already exists. No need to create a new one. Going home.'))
       tauri.fs.writeFile({contents: jsoned, path: "TaskMasterData/user.json"}, {dir: tauri.fs.BaseDirectory.Document})      
     },
     setname(index){
@@ -319,7 +310,6 @@ export default Vue.extend({
     updateduein(index){
       var today = new Date()
       var setdate = new Date(this.datas[index].date)
-      console.log(setdate)
 
       var diff = (setdate.getTime()-today.getTime())/86400000
       
@@ -341,6 +331,10 @@ export default Vue.extend({
       else{
         this.recsexpanded = !this.recsexpanded
       }
+    },
+    
+    resort(){
+      this.datas.sort((a, b) => a.type - b.type)
     }
 
   },
@@ -349,6 +343,16 @@ export default Vue.extend({
       var jsonc = JSON.parse(val)
       this.datas = jsonc
     })
+
+    setTimeout(() => {  this.sortedarray; }, 1);
+    
+  },
+  
+  computed: {
+    sortedarray: function(){ 
+      var array = this.datas
+      return array.sort((a, b) => {return a.type - b.type})
+    }
   }
 });
 
