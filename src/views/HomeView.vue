@@ -75,9 +75,9 @@
       <v-divider></v-divider>
       <v-container fluid>
 
-        <v-card v-for="(item, index) in datas" class="mb-2" :key="index">
-          <v-sheet dark align="center" :color="setcolor(index)" height="20" width="50%" style="font-size: 11pt;" class="d-inline-block rounded-tr-0">{{setname(index)}}</v-sheet>
-          <v-sheet dark align="center" :color="updateduein(index)[1]" height="20" width="50%" style="font-size:11pt;" class="d-inline-block rounded-tr">{{updateduein(index)[0]}}</v-sheet>
+        <v-card v-for="(item, index) in prioritysortedarray" class="mb-2" :key="index">
+          <v-sheet dark align="center" :color="setcolor(item)" height="20" width="50%" style="font-size: 11pt;" class="d-inline-block rounded-tr-0">{{setname(item)}}</v-sheet>
+          <v-sheet dark align="center" :color="updateduein(item)[1]" height="20" width="50%" style="font-size:11pt;" class="d-inline-block rounded-tr">{{updateduein(item)[0]}}</v-sheet>
           <v-card-title>{{item.name}}</v-card-title>
           <v-card-subtitle>Due date:&nbsp;{{item.date}}</v-card-subtitle>
         </v-card>
@@ -90,8 +90,8 @@
     <v-main>
       <v-container fluid>
 
-        <v-card v-for="(item, index) in datas" class="mb-2" :key="index">
-          <v-sheet dark align="center" :color="setcolor(index)" height="20" width="100%" style="font-size: 11pt;">{{setname(index)}}</v-sheet>
+        <v-card v-for="(item, index) in typesortedarray" class="mb-2" :key="index">
+          <v-sheet dark align="center" :color="setcolor(item)" height="20" width="100%" style="font-size: 11pt;">{{setname(item)}}</v-sheet>
           <v-card-title>{{item.name}}</v-card-title>
           <v-card-subtitle>Notes:&nbsp;{{item.notes}}</v-card-subtitle>
         </v-card>
@@ -237,7 +237,6 @@ export default Vue.extend({
       menu: false,
       datas: undefined,
 
-
       eventname: undefined,
       date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       notes: undefined,
@@ -261,9 +260,6 @@ export default Vue.extend({
   },
 
   methods:{
-    consolelogging(){
-      console.log(this.sortedarray)
-    },
     changeapp (){
       if (this.addexpanded){
         this.addexpanded = false
@@ -279,37 +275,37 @@ export default Vue.extend({
       tauri.fs.createDir("TaskMasterData", {dir: tauri.fs.BaseDirectory.Document}).catch(err => console.log('The json file already exists. No need to create a new one. Going home.'))
       tauri.fs.writeFile({contents: jsoned, path: "TaskMasterData/user.json"}, {dir: tauri.fs.BaseDirectory.Document})      
     },
-    setname(index){
-      if (this.datas[index].type == 1){
+    setname(item){
+      if (item.type == 1){
         return "Summative"
       }
-      else if (this.datas[index].type == 2){
+      else if (item.type == 2){
         return "Formative"
       }
-      else if (this.datas[index].type == 3){
+      else if (item.type == 3){
         return "Informative"
       }
       else {
         return "Other"
       }
     },
-    setcolor(index){
-      if (this.datas[index].type == 1){
+    setcolor(item){
+      if (item.type == 1){
         return "deep-purple"
       }
-      else if (this.datas[index].type == 2){
+      else if (item.type == 2){
         return "indigo"
       }
-      else if (this.datas[index].type == 3){
+      else if (item.type == 3){
         return "blue"
       }
       else {
         return "deep-orange"
       }
     },
-    updateduein(index){
+    updateduein(item){
       var today = new Date()
-      var setdate = new Date(this.datas[index].date)
+      var setdate = new Date(item.date)
 
       var diff = (setdate.getTime()-today.getTime())/86400000
       
@@ -331,28 +327,30 @@ export default Vue.extend({
       else{
         this.recsexpanded = !this.recsexpanded
       }
-    },
-    
-    resort(){
-      this.datas.sort((a, b) => a.type - b.type)
     }
 
   },
-  mounted() {
-    tauri.fs.readTextFile("TaskMasterData/user.json", {dir: tauri.fs.BaseDirectory.Document}).then((val) => {
+
+  beforeMount(){
+      tauri.fs.readTextFile("TaskMasterData/user.json", {dir: tauri.fs.BaseDirectory.Document}).then((val) => {
       var jsonc = JSON.parse(val)
       this.datas = jsonc
     })
-
-    setTimeout(() => {  this.sortedarray; }, 1);
-    
   },
   
   computed: {
-    sortedarray: function(){ 
-      var array = this.datas
-      return array.sort((a, b) => {return a.type - b.type})
-    }
+    typesortedarray(){ 
+      return [...this.datas].sort((a, b) => {return a.type - b.type})
+    },
+    prioritysortedarray(){ 
+      return [...this.datas].sort((a, b) => {
+        var today = new Date()
+        var dateuno = new Date(a.date)
+        var datedos = new Date(b.date)  
+
+        return (dateuno.getTime()-today.getTime())/86400000 - (datedos.getTime()-today.getTime())/86400000
+      })
+    },
   }
 });
 
