@@ -9,11 +9,6 @@
 <script lang="ts">
 import Vue from 'vue';
 
-import * as tauri from "@tauri-apps/api"
-
-const win = tauri.window.appWindow
-
-
 
 
 

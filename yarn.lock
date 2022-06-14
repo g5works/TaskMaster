@@ -9276,7 +9276,7 @@ vue-template-es2015-compiler@^1.9.0:
 
 vue-underscore@^0.1.4:
   version "0.1.4"
-  resolved "https://registry.npmjs.org/vue-underscore/-/vue-underscore-0.1.4.tgz"
+  resolved "https://registry.yarnpkg.com/vue-underscore/-/vue-underscore-0.1.4.tgz#c3dcee26a6e0279df29448a6041a7e64c20981aa"
   integrity sha512-VRTHVW75DWWP/FqIBae/02EGm3MM4uju0tUXGSCXfdjFE+V3XfsIlPJAG2gVbJCKQoqylhr3OV9wFNM1Up/OcA==
   dependencies:
     underscore "^1.8.3"

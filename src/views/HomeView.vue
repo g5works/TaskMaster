@@ -95,9 +95,28 @@
           multiple
         >
           <v-expansion-panel v-for="(content, data) in typesortedarray" :key="data">
-            <v-expansion-panel-header style="font-size:x-large; font-weight:bold">{{data}}</v-expansion-panel-header>
+            <v-expansion-panel-header>
+              <v-row no-gutters>
+                <v-col cols="4" class="text-h5 font-weight-bold">
+                  {{new Date(data).toLocaleDateString('en-US',{weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}}
+                </v-col>
+                <v-col
+                  cols="10"
+                  class="text--secondary"
+                >
+                    <v-row
+     
+                      style="width: 100%"
+                    >
+                      <v-col cols="6">
+                        Number of items: {{content.length}}
+                      </v-col>
+                    </v-row>
+                </v-col>
+              </v-row>
+            </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <v-card v-for="(item, index) in content" class="mb-2" :key="index">
+              <v-card v-for="(item, index) in content" class="mb-2" :key="index" elevation="5">
                 <v-sheet dark align="center" :color="setcolor(item)" height="20" width="100%" style="font-size: 11pt;">{{setname(item)}}</v-sheet>
                 <v-card-title>{{item.name}}</v-card-title>
                 <v-card-subtitle>Notes:&nbsp;{{item.notes}}</v-card-subtitle>
@@ -358,6 +377,7 @@ export default Vue.extend({
   computed: {
     typesortedarray(){ 
       var sortedarray = [...this.datas].sort((a, b) => {return a.type - b.type})
+      console.log(sortedarray)
       return this.$_.groupBy(sortedarray, (array)=>{return array.date})
     },
     prioritysortedarray(){ 
@@ -366,7 +386,7 @@ export default Vue.extend({
         var dateuno = new Date(a.date)
         var datedos = new Date(b.date)  
 
-        return (dateuno.getTime()-today.getTime())/86400000 - (datedos.getTime()-today.getTime())/86400000
+        return (dateuno.getTime()-today.getTime()) - (datedos.getTime()-today.getTime())
       })
     },
   }
