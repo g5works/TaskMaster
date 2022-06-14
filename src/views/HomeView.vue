@@ -90,11 +90,16 @@
     <v-main>
       <v-container fluid>
 
-        <v-card v-for="(item, index) in typesortedarray" class="mb-2" :key="index">
+        <v-sheet v-for="data in typesortedarray" :key="data">
+          hi
+        </v-sheet>
+
+
+        <!-- <v-card v-for="(item, index) in typesortedarray" class="mb-2" :key="index">
           <v-sheet dark align="center" :color="setcolor(item)" height="20" width="100%" style="font-size: 11pt;">{{setname(item)}}</v-sheet>
           <v-card-title>{{item.name}}</v-card-title>
           <v-card-subtitle>Notes:&nbsp;{{item.notes}}</v-card-subtitle>
-        </v-card>
+        </v-card> -->
         
         <v-container fill-height>
             <v-row justify="center" align="center">
@@ -173,7 +178,7 @@
                       <v-card-actions>
                         <v-spacer/>
                           <v-btn text color="purple" @click="dialogopen=false">Cancel</v-btn>
-                          <v-btn text color="purple" @click="() => {pushtoarray(), pushtojson(), dialogopen=false, consolelogging()}">Create</v-btn>
+                          <v-btn text color="purple" @click="() => {pushtoarray(), pushtojson(), dialogopen=false}">Create</v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -200,7 +205,11 @@
 
 <script lang="js">
 import Vue from 'vue';
-import * as tauri from "@tauri-apps/api"
+import underscore from 'vue-underscore';
+import * as tauri from "@tauri-apps/api";
+
+Vue.use(underscore);
+
 
 Vue.directive('click-outside', {
   bind: function (el, binding, vnode) {
@@ -235,7 +244,7 @@ export default Vue.extend({
       appbaricon: "mdi-menu",
       dialogopen: false,
       menu: false,
-      datas: undefined,
+      datas: [],
 
       eventname: undefined,
       date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
@@ -340,7 +349,8 @@ export default Vue.extend({
   
   computed: {
     typesortedarray(){ 
-      return [...this.datas].sort((a, b) => {return a.type - b.type})
+      var sortedarray = [...this.datas].sort((a, b) => {return a.type - b.type})
+      return this.$_.groupBy(sortedarray, (array)=>{return array.date})
     },
     prioritysortedarray(){ 
       return [...this.datas].sort((a, b) => {
