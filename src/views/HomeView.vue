@@ -89,17 +89,24 @@
 
     <v-main>
       <v-container fluid>
+        
+        <v-expansion-panels
+          v-model="panel"
+          multiple
+        >
+          <v-expansion-panel v-for="(content, data) in typesortedarray" :key="data">
+            <v-expansion-panel-header style="font-size:x-large; font-weight:bold">{{data}}</v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <v-card v-for="(item, index) in content" class="mb-2" :key="index">
+                <v-sheet dark align="center" :color="setcolor(item)" height="20" width="100%" style="font-size: 11pt;">{{setname(item)}}</v-sheet>
+                <v-card-title>{{item.name}}</v-card-title>
+                <v-card-subtitle>Notes:&nbsp;{{item.notes}}</v-card-subtitle>
+              </v-card>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
 
-        <v-sheet v-for="data in typesortedarray" :key="data">
-          hi
-        </v-sheet>
+        </v-expansion-panels>
 
-
-        <!-- <v-card v-for="(item, index) in typesortedarray" class="mb-2" :key="index">
-          <v-sheet dark align="center" :color="setcolor(item)" height="20" width="100%" style="font-size: 11pt;">{{setname(item)}}</v-sheet>
-          <v-card-title>{{item.name}}</v-card-title>
-          <v-card-subtitle>Notes:&nbsp;{{item.notes}}</v-card-subtitle>
-        </v-card> -->
         
         <v-container fill-height>
             <v-row justify="center" align="center">
@@ -235,6 +242,7 @@ export default Vue.extend({
 
   data: function() {
     return {
+      panel: [],
       message: "renderer",
       navexpanded: false,
       recsexpanded: false,
