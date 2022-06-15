@@ -5,6 +5,7 @@ module.exports = defineConfig({
   ],
   devServer: {
     host: 'localhost'
-  }
+  },
+  outputDir: 'src-tauri/target/webpack_dist'
 })
 
