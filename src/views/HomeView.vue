@@ -98,7 +98,7 @@
             <v-expansion-panel-header>
               <v-row no-gutters>
                 <v-col cols="4" class="text-h5 font-weight-bold">
-                  {{new Date(data).toLocaleDateString('en-US',{weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}}
+                  {{new Date(`${data}T12:00:00`).toLocaleDateString('en-US',{weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}}
                 </v-col>
                 <v-col
                   cols="10"
@@ -377,8 +377,16 @@ export default Vue.extend({
   computed: {
     typesortedarray(){ 
       var sortedarray = [...this.datas].sort((a, b) => {return a.type - b.type})
-      console.log(sortedarray)
-      return this.$_.groupBy(sortedarray, (array)=>{return array.date})
+      var grouped = this.$_.groupBy(sortedarray, (array)=>{return array.date})
+      return Object.keys(grouped).sort().reduce(
+          (obj, key) => { 
+            obj[key] = grouped[key]; 
+            return obj;
+          }, 
+          {}
+      )
+      
+
     },
     prioritysortedarray(){ 
       return [...this.datas].sort((a, b) => {
@@ -386,7 +394,7 @@ export default Vue.extend({
         var dateuno = new Date(a.date)
         var datedos = new Date(b.date)  
 
-        return (dateuno.getTime()-today.getTime()) - (datedos.getTime()-today.getTime())
+        return (dateuno.getTime()-today.getTime())*a.type - (datedos.getTime()-today.getTime()*b.type)
       })
     },
   }
