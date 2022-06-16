@@ -7,6 +7,13 @@
       <v-app-bar-nav-icon v-on:click="navexpanded = !navexpanded"><v-icon>{{appbaricon}}</v-icon></v-app-bar-nav-icon>
       <v-app-bar-title>TaskMaster</v-app-bar-title>
       <v-spacer></v-spacer>
+      <v-slide-x-reverse-transition>
+        <v-btn text v-if="collapsevisible" v-on:click="closepanels">
+          collapse all
+        </v-btn>
+      </v-slide-x-reverse-transition>
+
+      <v-divider vertical inset/>
       <v-menu>
         <template v-slot:activator="{on, attribute}">
           <v-btn icon v-bind="attribute" v-on="on">
@@ -97,22 +104,10 @@
           <v-expansion-panel v-for="(content, data) in typesortedarray" :key="data">
             <v-expansion-panel-header>
               <v-row no-gutters>
-                <v-col cols="4" class="text-h5 font-weight-bold">
+                <v-col cols="4" class="font-weight-bold">
                   {{new Date(`${data}T12:00:00`).toLocaleDateString('en-US',{weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}}
                 </v-col>
-                <v-col
-                  cols="10"
-                  class="text--secondary"
-                >
-                    <v-row
-     
-                      style="width: 100%"
-                    >
-                      <v-col cols="6">
-                        Number of items: {{content.length}}
-                      </v-col>
-                    </v-row>
-                </v-col>
+                <v-col cols="3" class="text--secondary">Number of items: {{content.length}}</v-col>
               </v-row>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
@@ -237,31 +232,14 @@ import * as tauri from "@tauri-apps/api";
 Vue.use(underscore);
 
 
-Vue.directive('click-outside', {
-  bind: function (el, binding, vnode) {
-    el.clickOutsideEvent = function (event) {
-      console.log(event)
-      // here I check that click was outside the el and his children
-      if (!(el == event.target || el.contains(event.target))) {
-        // and if it did, call method provided in attribute value
-        vnode.context[binding.expression](event);
-      }
-    };
-    document.body.addEventListener('click', el.clickOutsideEvent)
-  },
-  unbind: function (el) {
-    document.body.removeEventListener('click', el.clickOutsideEvent)
-  },
-});
 
 export default Vue.extend({
   name: 'App',
 
-
-
   data: function() {
     return {
       panel: [],
+      collapsevisible: false,
       message: "renderer",
       navexpanded: false,
       recsexpanded: false,
@@ -292,10 +270,17 @@ export default Vue.extend({
 
     datas (val){
       if (val.length > 0){this.notaskswindow = false;}
+    },
+    panel (){
+      this.panel.length != 0 ? this.collapsevisible = true : this.collapsevisible = false
     }
   },
 
   methods:{
+    closepanels(){
+      this.panel = []
+    },
+
     changeapp (){
       if (this.addexpanded){
         this.addexpanded = false
