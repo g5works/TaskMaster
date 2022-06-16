@@ -11,10 +11,12 @@
         <v-btn text v-if="collapsevisible" @click="closepanels">
           collapse all
         </v-btn>
-      </v-slide-x-reverse-transition>
 
-      <v-divider vertical inset/>
-      <v-menu>
+      </v-slide-x-reverse-transition>
+      <v-slide-x-reverse-transition><v-divider v-if="collapsevisible" vertical inset/></v-slide-x-reverse-transition>
+              
+
+      <v-menu transition="scroll-x-transition">
         <template v-slot:activator="{on, attribute}">
           <v-btn icon v-bind="attribute" v-on="on">
             <v-icon style="mix-blend-mode: difference;">mdi-dots-vertical</v-icon>
@@ -112,8 +114,8 @@
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <v-card v-for="(item, index) in content" class="mb-2" :key="index" elevation="5">
-                <v-sheet dark align="center" :color="setcolor(item)" height="20" width="90%" class="pa-0 ma-0" style="font-size: 11pt;">&nbsp;{{setname(item)}}</v-sheet>
-                <v-btn tile elevation="0" height="20" width="10%">...</v-btn>
+                <v-sheet dark align="center" :color="setcolor(item)" height="20" width="90%" class="pa-0 ma-0 d-inline-block" style="font-size: 11pt;">&nbsp;{{setname(item)}}</v-sheet>
+                <v-btn tile elevation="0" height="20" width="10%" color="red" class="d-inline-block" style="border: 10px;">...</v-btn>
                 <v-card-title>{{item.name}}</v-card-title>
                 <v-card-subtitle>Notes:&nbsp;{{item.notes}}</v-card-subtitle>
               </v-card>
@@ -232,7 +234,7 @@ import * as tauri from "@tauri-apps/api";
 
 Vue.use(underscore);
 
-import UUID from "vue-uuid";
+import uuid from "vue-uuid";
 
 // Vue.use(UUID);
 
