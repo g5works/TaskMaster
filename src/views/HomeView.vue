@@ -8,7 +8,7 @@
       <v-app-bar-title>TaskMaster</v-app-bar-title>
       <v-spacer></v-spacer>
       <v-slide-x-reverse-transition>
-        <v-btn text v-if="collapsevisible" v-on:click="closepanels">
+        <v-btn text v-if="collapsevisible" @click="closepanels">
           collapse all
         </v-btn>
       </v-slide-x-reverse-transition>
@@ -227,9 +227,14 @@
 <script lang="js">
 import Vue from 'vue';
 import underscore from 'vue-underscore';
+
 import * as tauri from "@tauri-apps/api";
 
 Vue.use(underscore);
+
+import UUID from "vue-uuid";
+
+// Vue.use(UUID);
 
 
 
@@ -279,6 +284,7 @@ export default Vue.extend({
   methods:{
     closepanels(){
       this.panel = []
+      // console.log(this.$uuid.v4())
     },
 
     changeapp (){
