@@ -5,7 +5,7 @@
       color="purple" app dark fixed dense expanded>
 
       <v-app-bar-nav-icon v-on:click="navexpanded = !navexpanded"><v-icon>{{appbaricon}}</v-icon></v-app-bar-nav-icon>
-      <v-app-bar-title>TaskMaster</v-app-bar-title>
+      <v-app-bar-title>TaskMaster Beta Star Dream</v-app-bar-title>
       <v-spacer></v-spacer>
       <v-slide-x-reverse-transition>
         <v-btn text v-if="collapsevisible" @click="closepanels">
@@ -44,8 +44,8 @@
       <v-list dark>
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title style="font-size: 20pt; font-weight: bold;" align="center">TaskMaster</v-list-item-title>
-            <v-list-item-subtitle align="center">Version 3 Alpha "Star Dream DA"</v-list-item-subtitle>
+            <v-list-item-title style="font-size: 20pt; font-weight: bold;" align="center">Add</v-list-item-title>
+            <v-list-item-subtitle align="center">Add/Import events to the Task List</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -118,7 +118,6 @@
               </v-card>
             </v-expansion-panel-content>
           </v-expansion-panel>
-
         </v-expansion-panels>
 
         
