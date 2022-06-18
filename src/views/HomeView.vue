@@ -114,10 +114,29 @@
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <v-card v-for="(item, index) in content" class="mb-2" :key="index" elevation="5">
-                <v-sheet dark align="center" :color="setcolor(item)" height="20" width="100%" class="pa-0 ma-0 d-inline-block" style="font-size: 11pt;">&nbsp;{{setname(item)}}
-</v-sheet>
-                <v-card-title>{{item.name}}</v-card-title>
-                <v-card-subtitle>Notes:&nbsp;{{item.notes}}</v-card-subtitle>
+                <v-sheet dark align="center" :color="setcolor(item)" height="20" width="100%" style="font-size: 11pt;">&nbsp;{{setname(item)}}</v-sheet>
+                <div class="d-inline-block" ref="contentcard">
+                  <v-card-title>{{item.name}}</v-card-title>
+                  <v-card-subtitle class="text--secondary">Notes:&nbsp;{{item.notes}}</v-card-subtitle>
+                </div>
+                <v-menu transition="scale-transition">
+                  <template v-slot:activator="{on, attrs}">
+                    <v-btn v-bind="attrs" v-on="on" class="d-inline-block mt-2 mr-2 float-right" icon><v-icon>mdi-dots-vertical</v-icon></v-btn>
+                  </template>
+                  <v-list dense>
+                    <v-list-item link>
+                      <v-list-item-content>
+                        <v-list-item-title><v-icon small color="red">mdi-delete</v-icon>&nbsp;Delete Event</v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item link>
+                      <v-list-item-content>
+                        <v-list-item-title><v-icon small color="blue">mdi-calendar-export</v-icon>&nbsp;Export Event</v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+                
               </v-card>
             </v-expansion-panel-content>
           </v-expansion-panel>
@@ -231,6 +250,7 @@ import Vue from 'vue';
 import underscore from 'vue-underscore';
 
 import * as tauri from "@tauri-apps/api";
+import { v4 as uuidv4 } from 'uuid';
 
 Vue.use(underscore);
 
@@ -284,12 +304,8 @@ export default Vue.extend({
   },
 
   methods:{
-    test(){
-      console.log('the click test function was triggered')
-    },
     closepanels(){
       this.panel = []
-      // console.log(this.$uuid.v4())
     },
 
     changeapp (){
@@ -300,7 +316,7 @@ export default Vue.extend({
     },
     
     pushtoarray(){
-      this.datas.push({id:"identifier", name: this.eventname, notes: this.notes, type: this.type+1, date: this.date});
+      this.datas.push({id:uuidv4(), name: this.eventname, notes: this.notes, type: this.type+1, date: this.date});
     },
     pushtojson(){
       var jsoned = JSON.stringify(this.datas)
