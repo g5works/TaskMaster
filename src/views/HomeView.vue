@@ -62,7 +62,7 @@
           </v-list-item-content>
         </v-list-item>
         
-        <v-list-item link>
+        <v-list-item link @click="launchopendialog()">
           <v-list-item-icon><v-icon>mdi-calendar-import</v-icon></v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title>Import event</v-list-item-title>
@@ -131,7 +131,7 @@
                           <v-list-item-title><v-icon small color="red">mdi-delete</v-icon>&nbsp;Delete Event</v-list-item-title>
                         </v-list-item-content>
                       </v-list-item>
-                      <v-list-item link>
+                      <v-list-item link @click="launchsavedialog(item.id)">
                         <v-list-item-content>
                           <v-list-item-title><v-icon small color="blue">mdi-calendar-export</v-icon>&nbsp;Export Event</v-list-item-title>
                         </v-list-item-content>
@@ -160,7 +160,7 @@
                         <v-card-title ><v-icon>mdi-calendar-plus</v-icon>&nbsp;Add a new event</v-card-title>  
                       </v-card>
                       <br>
-                      <v-card outlined class="pa-1" link>
+                      <v-card outlined class="pa-1" link @click="launchopendialog()">
                         <v-card-title><v-icon>mdi-calendar-import</v-icon>&nbsp;Import an event file</v-card-title>
                       </v-card>
                     </div>
@@ -231,6 +231,20 @@
                     </v-card>
                   </v-dialog>
 
+                  <v-dialog v-model="nohashwindow" width="600">
+                    <v-card>
+                      <v-card-title class="text-h5 red" style="color:white;">Corrupted or Insecure event</v-card-title>
+                      <v-container>
+                        <v-card-subtitle>The event you have tried to add is corrupted, or has been modified. This event will be rejected for your safety. Ask the person you got this event from to give you another copy if you are sure that this event is safe.</v-card-subtitle>
+                      </v-container>
+                      <v-card-actions>
+                        <v-spacer/>
+                          <v-btn text color="red" @click="nohashwindow=false">OK</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+
+
                 </v-col>
             </v-row>
         </v-container>
@@ -257,6 +271,8 @@ import Vue from 'vue';
 import underscore from 'vue-underscore';
 
 import * as tauri from "@tauri-apps/api";
+import * as tauriFSExtra from "tauri-plugin-fs-extra-api"
+import md5 from "md5";
 import { v4 as uuidv4 } from 'uuid';
 
 Vue.use(underscore);
@@ -282,6 +298,7 @@ export default Vue.extend({
       appbaricon: "mdi-menu",
       dialogopen: false,
       menu: false,
+      nohashwindow: false,
       datas: [],
 
       eventname: undefined,
@@ -313,8 +330,35 @@ export default Vue.extend({
 
   methods:{
 
+    launchopendialog(){
+      tauri.dialog.open().then((value) => {tauri.fs.readTextFile(value).then((val)=>{
+        var obj = JSON.parse(val)
+
+        if (obj['hash'] == md5(JSON.stringify(obj['events']))){
+          this.datas.push(obj['events'])
+        }
+        else{
+          this.nohashwindow = true
+        }
+        
+
+        }
+        )})
+    },
+    
+    launchsavedialog(id){
+      tauri.dialog.save({
+        filters: [{
+          name: "TaskMaster Event",
+          extensions: ["tme"]
+        }]
+      }).then((val) => {
+        console.log(this.datas[1])
+        tauri.fs.writeFile({contents: `{"events":${JSON.stringify(this.datas[this.datas.map(object => object.id).indexOf(id)])}, "hash":"${md5(JSON.stringify(this.datas[this.datas.map(object => object.id).indexOf(id)]))}"}`, path: val})   
+      })
+    },
+
     deleteitem(id){
-      console.log(`delete event item with an id of ${id}, and with an index of ${this.datas.map(object => object.id).indexOf(id)}`)
       this.datas.splice(this.datas.map(object => object.id).indexOf(id), 1)
       this.pushtojson()
     },
@@ -328,7 +372,7 @@ export default Vue.extend({
     },
     pushtojson(){
       var jsoned = JSON.stringify(this.datas)
-      tauri.fs.createDir("TaskMasterData", {dir: tauri.fs.BaseDirectory.Document}).catch(err => console.log('The json file already exists. No need to create a new one. Going home.'))
+      tauri.fs.createDir("TaskMasterData", {dir: tauri.fs.BaseDirectory.Document}).catch(err => console.log('The TaskMasterData folder already exists. Process going home.'))
       tauri.fs.writeFile({contents: jsoned, path: "TaskMasterData/user.json"}, {dir: tauri.fs.BaseDirectory.Document})      
     },
     setname(item){
@@ -390,7 +434,13 @@ export default Vue.extend({
       tauri.fs.readTextFile("TaskMasterData/user.json", {dir: tauri.fs.BaseDirectory.Document}).then((val) => {
       var jsonc = JSON.parse(val)
       this.datas = jsonc
-    })
+      })
+      tauriFSExtra.exists("C:/Users/Aryan Tadepalli/Documents/TaskMasterData/user.json").then((val) => {
+        if (!val){
+          tauri.fs.writeFile({contents: '[]', path: "TaskMasterData/user.json"}, {dir: tauri.fs.BaseDirectory.Document})  
+        }
+      })
+      console.log(md5("this will output a hash!"))
   },
 
   computed: {

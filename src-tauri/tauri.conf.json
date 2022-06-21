@@ -62,6 +62,10 @@
       },
       "path": {
         "all": true
+      },
+      "dialog": {
+        "open": true,
+        "save": true
       }
     },
     "windows": [
