@@ -103,6 +103,7 @@
           v-model="panel"
           multiple
         >
+          <v-scroll-x-transition leave-absolute>
           <v-expansion-panel v-for="(content, data) in typesortedarray" :key="data">
             <v-expansion-panel-header>
               <v-row no-gutters>
@@ -113,52 +114,57 @@
               </v-row>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <v-card v-for="(item, index) in content" class="mb-2" :key="index" elevation="5">
-                <v-sheet dark align="center" :color="setcolor(item)" height="20" width="100%" style="font-size: 11pt;">&nbsp;{{setname(item)}}</v-sheet>
-                <div class="d-inline-block" ref="contentcard">
-                  <v-card-title>{{item.name}}</v-card-title>
-                  <v-card-subtitle class="text--secondary">Notes:&nbsp;{{item.notes}}</v-card-subtitle>
-                </div>
-                <v-menu transition="scale-transition">
-                  <template v-slot:activator="{on, attrs}">
-                    <v-btn v-bind="attrs" v-on="on" class="d-inline-block mt-2 mr-2 float-right" icon><v-icon>mdi-dots-vertical</v-icon></v-btn>
-                  </template>
-                  <v-list dense>
-                    <v-list-item link>
-                      <v-list-item-content>
-                        <v-list-item-title><v-icon small color="red">mdi-delete</v-icon>&nbsp;Delete Event</v-list-item-title>
-                      </v-list-item-content>
-                    </v-list-item>
-                    <v-list-item link>
-                      <v-list-item-content>
-                        <v-list-item-title><v-icon small color="blue">mdi-calendar-export</v-icon>&nbsp;Export Event</v-list-item-title>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-                
-              </v-card>
+              <v-scroll-x-transition v-for="item in content" :key="item.id" leave-absolute>
+                <v-card class="mb-2" elevation="5">
+                  <v-sheet dark align="center" :color="setcolor(item)" height="20" width="100%" style="font-size: 11pt;">&nbsp;{{setname(item)}}</v-sheet>
+                  <div class="d-inline-block" style="width:calc(100% - 44px); ">
+                    <v-card-title>{{item.name}}</v-card-title>
+                    <v-card-subtitle class="text--secondary">Notes:&nbsp;{{item.notes}}</v-card-subtitle>
+                  </div>
+                  <v-menu transition="scale-transition">
+                    <template v-slot:activator="{on, attrs}">
+                      <v-btn v-bind="attrs" v-on="on" class="d-inline-block mt-2 mr-2 float-right" icon><v-icon>mdi-dots-vertical</v-icon></v-btn>
+                    </template>
+                    <v-list dense>
+                      <v-list-item link @click="deleteitem(item.id)">
+                        <v-list-item-content>
+                          <v-list-item-title><v-icon small color="red">mdi-delete</v-icon>&nbsp;Delete Event</v-list-item-title>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item link>
+                        <v-list-item-content>
+                          <v-list-item-title><v-icon small color="blue">mdi-calendar-export</v-icon>&nbsp;Export Event</v-list-item-title>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+                  
+                </v-card>
+              </v-scroll-x-transition>
+              
             </v-expansion-panel-content>
           </v-expansion-panel>
+          </v-scroll-x-transition>
         </v-expansion-panels>
 
-        
+
         <v-container fill-height>
             <v-row justify="center" align="center">
                 <v-col cols="1200" sm="9">
-
-                  <div v-if="notaskswindow">                  
-                    <p align="center" justify="center" style="font-size: 5vh;">Haven't added anything yet?</p>
-                    <p align="center" justify="center" style="font-size: 3vh; color: gray;">Here's some things you should do!</p>
-                    
-                    <v-card outlined class="pa-1" link @click="dialogopen = true">
-                      <v-card-title ><v-icon>mdi-calendar-plus</v-icon>&nbsp;Add a new event</v-card-title>  
-                    </v-card>
-                    <br>
-                    <v-card outlined class="pa-1" link>
-                      <v-card-title><v-icon>mdi-calendar-import</v-icon>&nbsp;Import an event file</v-card-title>
-                    </v-card>
-                  </div>
+                  <v-fade-transition leave-absolute>
+                    <div v-if="notaskswindow">                  
+                      <p align="center" justify="center" style="font-size: 5vh;">Haven't added anything yet?</p>
+                      <p align="center" justify="center" style="font-size: 3vh; color: gray;">Here's some things you should do!</p>
+                      
+                      <v-card outlined class="pa-1" link @click="dialogopen = true">
+                        <v-card-title ><v-icon>mdi-calendar-plus</v-icon>&nbsp;Add a new event</v-card-title>  
+                      </v-card>
+                      <br>
+                      <v-card outlined class="pa-1" link>
+                        <v-card-title><v-icon>mdi-calendar-import</v-icon>&nbsp;Import an event file</v-card-title>
+                      </v-card>
+                    </div>
+                  </v-fade-transition>
 
                   <v-dialog v-model="dialogopen" width="600">
                     <v-card>
@@ -229,6 +235,7 @@
             </v-row>
         </v-container>
 
+
       </v-container>
       
     </v-main>
@@ -271,7 +278,6 @@ export default Vue.extend({
       navexpanded: false,
       recsexpanded: false,
       norecs: false,
-      addexpanded: false,
       notaskswindow: true,
       appbaricon: "mdi-menu",
       dialogopen: false,
@@ -297,22 +303,24 @@ export default Vue.extend({
 
     datas (val){
       if (val.length > 0){this.notaskswindow = false;}
+      else{this.notaskswindow = true;}
     },
     panel (){
       this.panel.length != 0 ? this.collapsevisible = true : this.collapsevisible = false
-    }
+    },
+
   },
 
   methods:{
-    closepanels(){
-      this.panel = []
+
+    deleteitem(id){
+      console.log(`delete event item with an id of ${id}, and with an index of ${this.datas.map(object => object.id).indexOf(id)}`)
+      this.datas.splice(this.datas.map(object => object.id).indexOf(id), 1)
+      this.pushtojson()
     },
 
-    changeapp (){
-      if (this.addexpanded){
-        this.addexpanded = false
-      }
-      
+    closepanels(){
+      this.panel = []
     },
     
     pushtoarray(){
@@ -375,8 +383,7 @@ export default Vue.extend({
       else{
         this.recsexpanded = !this.recsexpanded
       }
-    }
-
+    },
   },
 
   beforeMount(){
@@ -385,7 +392,7 @@ export default Vue.extend({
       this.datas = jsonc
     })
   },
-  
+
   computed: {
     typesortedarray(){ 
       var sortedarray = [...this.datas].sort((a, b) => {return a.type - b.type})
