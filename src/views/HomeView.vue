@@ -5,7 +5,7 @@
       color="purple" app dark fixed dense expanded>
 
       <v-app-bar-nav-icon v-on:click="navexpanded = !navexpanded"><v-icon>{{appbaricon}}</v-icon></v-app-bar-nav-icon>
-      <v-app-bar-title>TaskMaster Beta Star Dream</v-app-bar-title>
+      <v-app-bar-title>TaskMaster</v-app-bar-title>
       <v-spacer></v-spacer>
       <v-slide-x-reverse-transition>
         <v-btn text v-if="collapsevisible" @click="closepanels">
@@ -87,7 +87,7 @@
         <v-card v-for="(item, index) in prioritysortedarray" class="mb-2" :key="index">
           <v-sheet dark align="center" :color="setcolor(item)" height="20" width="50%" style="font-size: 11pt;" class="d-inline-block rounded-tr-0">{{setname(item)}}</v-sheet>
           <v-sheet dark align="center" :color="updateduein(item)[1]" height="20" width="50%" style="font-size:11pt;" class="d-inline-block rounded-tr">{{updateduein(item)[0]}}</v-sheet>
-          <v-card-title>{{item.name}}</v-card-title>
+          <v-card-title><vue-markdown>{{item.name}}</vue-markdown></v-card-title>
           <v-card-subtitle>Due date:&nbsp;{{item.date}}</v-card-subtitle>
         </v-card>
         
@@ -118,8 +118,8 @@
                 <v-card class="mb-2" elevation="5">
                   <v-sheet dark align="center" :color="setcolor(item)" height="20" width="100%" style="font-size: 11pt;">&nbsp;{{setname(item)}}</v-sheet>
                   <div class="d-inline-block" style="width:calc(100% - 44px); ">
-                    <v-card-title>{{item.name}}</v-card-title>
-                    <v-card-subtitle class="text--secondary">Notes:&nbsp;{{item.notes}}</v-card-subtitle>
+                    <v-card-title><vue-markdown>{{item.name}}</vue-markdown></v-card-title>
+                    <v-card-subtitle class="text--secondary">Notes:&nbsp;<vue-markdown>{{item.notes}}</vue-markdown></v-card-subtitle>
                   </div>
                   <v-menu transition="scale-transition">
                     <template v-slot:activator="{on, attrs}">
@@ -251,7 +251,6 @@
 
 
       </v-container>
-      
     </v-main>
     <v-snackbar v-model="norecs" rounded="pill">
       Recommendations will only become available once you add an event
@@ -279,6 +278,12 @@ Vue.use(underscore);
 
 import uuid from "vue-uuid";
 
+import VueMarkdown from '@adapttive/vue-markdown'
+
+// new Vue({
+
+// })
+
 // Vue.use(UUID);
 
 
@@ -286,6 +291,9 @@ import uuid from "vue-uuid";
 export default Vue.extend({
   name: 'App',
 
+  components: {
+    VueMarkdown
+  },
   data: function() {
     return {
       panel: [],
@@ -336,6 +344,7 @@ export default Vue.extend({
 
         if (obj['hash'] == md5(JSON.stringify(obj['events']))){
           this.datas.push(obj['events'])
+          this.pushtojson()
         }
         else{
           this.nohashwindow = true
@@ -435,12 +444,20 @@ export default Vue.extend({
       var jsonc = JSON.parse(val)
       this.datas = jsonc
       })
-      tauriFSExtra.exists("C:/Users/Aryan Tadepalli/Documents/TaskMasterData/user.json").then((val) => {
-        if (!val){
-          tauri.fs.writeFile({contents: '[]', path: "TaskMasterData/user.json"}, {dir: tauri.fs.BaseDirectory.Document})  
-        }
+      tauri.path.documentDir().then((value)=>{
+        tauriFSExtra.exists(value).then((val) => {
+          console.log(val)
+          
+          if (!val){
+            tauri.fs.writeFile({contents: '[]', path: "TaskMasterData/user.json"}, {dir: tauri.fs.BaseDirectory.Document})  
+          }
+          else{
+            console.log('this file exists, and no prep will be needed!')
+          }
+        })
       })
-      console.log(md5("this will output a hash!"))
+      
+      // console.log(md5("this will output a hash!"))
   },
 
   computed: {

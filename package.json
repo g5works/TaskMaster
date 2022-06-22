@@ -11,6 +11,7 @@
     "tauri:serve": "vue-cli-service tauri:serve"
   },
   "dependencies": {
+    "@adapttive/vue-markdown": "^4.0.1",
     "@tauri-apps/api": "^1.0.1",
     "@tauri-apps/cli": "^1.0.0",
     "@vue/cli": "^5.0.4",

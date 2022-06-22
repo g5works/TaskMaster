@@ -2,6 +2,7 @@
   all(not(debug_assertions), target_os = "windows"),
   windows_subsystem = "windows"
 )]
+#![allow(non_snake_case)]
 
 use tauri_plugin_fs_extra::FsExtra;
 

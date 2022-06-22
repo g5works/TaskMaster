@@ -13,8 +13,8 @@
           <v-img src="../../media/logo.svg" max-height="400px" max-width="400px"/>
           <v-text style="font-size: 40pt; font-weight: bold">About TaskMaster</v-text><br>
           <v-text style="font-size: 15pt; font-weight: bold">Version 1.0.0b "Star Dream Beta"</v-text><br>
-          <v-text style="font-size: 15pt; font-weight: bold">Release Validation Test 3</v-text><br/>
-          <v-text style="font-size: 15pt; font-weight: bold">Not a Public/Public Beta build</v-text><br><br>
+          <v-text style="font-size: 15pt; font-weight: bold">Iteration 3</v-text><br/>
+          <v-text style="font-size: 15pt; font-weight: bold">Release Validation Test</v-text><br/>
           <v-text style="font-size: 40pt; font-weight: bold">Tools Used</v-text><br>
           <img src="../../media/tauri_with_wordmark.svg" style="max-height: 50px; max-width: 200px; display: inline-block"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <img src="../../media/vue.svg" style="max-height: 50px; max-width: 50px; display: inline-block"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -22,7 +22,7 @@
           <br><br>
           <v-text style="font-size: 40pt; font-weight: bold">About Your {{comptype}}</v-text><br>
           <v-text style="font-size: 15pt; font-weight: bold">Computer Architecture: {{arch}}</v-text><br>
-          <v-text style="font-size: 15pt; font-weight: bold">Temp Directory: {{tempdir}}</v-text><br>
+          <!-- <v-text style="font-size: 15pt; font-weight: bold">Temp Directory: {{tempdir}}</v-text><br> -->
           <v-text style="font-size: 15pt; font-weight: bold">Kernel/Operating System Version: {{kernel}}</v-text><br>
 
           
