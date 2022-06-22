@@ -456,8 +456,6 @@ export default Vue.extend({
           }
         })
       })
-      
-      // console.log(md5("this will output a hash!"))
   },
 
   computed: {
