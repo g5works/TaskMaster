@@ -280,14 +280,6 @@ import uuid from "vue-uuid";
 
 import VueMarkdown from '@adapttive/vue-markdown'
 
-// new Vue({
-
-// })
-
-// Vue.use(UUID);
-
-
-
 export default Vue.extend({
   name: 'App',
 
@@ -478,7 +470,7 @@ export default Vue.extend({
         var dateuno = new Date(a.date)
         var datedos = new Date(b.date)  
 
-        return (dateuno.getTime()-today.getTime())*a.type - (datedos.getTime()-today.getTime()*b.type)
+        return Math.ceil((dateuno.getTime()-today.getTime())/(1000 * 3600 * 24))*a.type - Math.ceil((datedos.getTime()-today.getTime())/(1000 * 3600 * 24))*b.type
       })
     },
   }
