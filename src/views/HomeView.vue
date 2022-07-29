@@ -37,7 +37,7 @@
 
       </v-menu>
       <v-divider vertical inset/>
-      <v-btn icon @click="recslock()">
+      <v-btn icon @click="recsexpanded = !recsexpanded">
         <v-icon style="mix-blend-mode: difference;">mdi-format-list-numbered</v-icon>
       </v-btn>
     </v-app-bar>
@@ -71,7 +71,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-navigation-drawer color="gray" app right width="450px" :disable-resize-watcher="notaskswindow" v-model="recsexpanded">
+    <v-navigation-drawer color="gray" app right width="450px" v-model="recsexpanded">
       <v-list>
         <v-list-item>
           <v-list-item-content>
@@ -103,8 +103,8 @@
           v-model="panel"
           multiple
         >
-          <v-scroll-x-transition leave-absolute>
-          <v-expansion-panel v-for="(content, data) in typesortedarray" :key="data">
+          <v-scroll-x-transition leave-absolute v-for="(content, data) in typesortedarray" :key="data">
+          <v-expansion-panel>
             <v-expansion-panel-header>
               <v-row no-gutters>
                 <v-col cols="4" class="font-weight-bold">
@@ -114,7 +114,7 @@
               </v-row>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <v-scroll-x-transition v-for="item in content" :key="item.id" leave-absolute>
+              <v-scroll-x-transition v-for="(item) in content" :key="item.id" leave-absolute>
                 <v-card class="mb-2" elevation="5">
                   <v-sheet dark align="center" :color="setcolor(item)" height="20" width="100%" style="font-size: 11pt;">&nbsp;{{setname(item)}}</v-sheet>
                   <div class="d-inline-block" style="width:calc(100% - 44px); ">
@@ -252,12 +252,6 @@
 
       </v-container>
     </v-main>
-    <v-snackbar v-model="norecs" rounded="pill">
-      Recommendations will only become available once you add an event
-      <template v-slot:action="attrs">
-        <v-btn v-bind="attrs" icon color="red" @click="norecs=false"><v-icon>mdi-close</v-icon></v-btn>
-      </template>
-    </v-snackbar>
   </div>
  
 </template>
@@ -293,7 +287,6 @@ export default Vue.extend({
       message: "renderer",
       navexpanded: false,
       recsexpanded: false,
-      norecs: false,
       notaskswindow: true,
       appbaricon: "mdi-menu",
       dialogopen: false,
@@ -373,8 +366,8 @@ export default Vue.extend({
     },
     pushtojson(){
       var jsoned = JSON.stringify(this.datas)
-      tauri.fs.createDir("TaskMasterData", {dir: tauri.fs.BaseDirectory.Document}).catch(err => console.log('The TaskMasterData folder already exists. Process going home.'))
-      tauri.fs.writeFile({contents: jsoned, path: "TaskMasterData/user.json"}, {dir: tauri.fs.BaseDirectory.Document})      
+      tauri.fs.createDir("TaskMaster", {dir: tauri.fs.BaseDirectory.Data}).catch(err => console.log('The TaskMaster data folder already exists. Process going home.'))
+      tauri.fs.writeFile({contents: jsoned, path: "TaskMaster/user.json"}, {dir: tauri.fs.BaseDirectory.Data})      
     },
     setname(item){
       if (item.type == 1){
@@ -420,28 +413,19 @@ export default Vue.extend({
         return [`Overdue by ${Math.abs(Math.ceil(diff))} day(s)`, 'red']
       }
     },
-
-    recslock(){
-      if (this.notaskswindow){
-        this.norecs = true
-      }
-      else{
-        this.recsexpanded = !this.recsexpanded
-      }
-    },
   },
 
   beforeMount(){
-      tauri.fs.readTextFile("TaskMasterData/user.json", {dir: tauri.fs.BaseDirectory.Document}).then((val) => {
+      tauri.fs.readTextFile("TaskMaster/user.json", {dir: tauri.fs.BaseDirectory.Data}).then((val) => {
       var jsonc = JSON.parse(val)
       this.datas = jsonc
       })
-      tauri.path.documentDir().then((value)=>{
+      tauri.path.dataDir().then((value)=>{
         tauriFSExtra.exists(value).then((val) => {
           console.log(val)
           
           if (!val){
-            tauri.fs.writeFile({contents: '[]', path: "TaskMasterData/user.json"}, {dir: tauri.fs.BaseDirectory.Document})  
+            tauri.fs.writeFile({contents: '[]', path: "TaskMaster/user.json"}, {dir: tauri.fs.BaseDirectory.Data})  
           }
           else{
             console.log('this file exists, and no prep will be needed!')
@@ -465,7 +449,9 @@ export default Vue.extend({
 
     },
     prioritysortedarray(){ 
-      return [...this.datas].sort((a, b) => {
+      var sortedarray = [...this.datas].sort((a, b) => {return a.type - b.type})
+      return [...sortedarray].sort((a, b) => {
+        
         var today = new Date()
         var dateuno = new Date(a.date)
         var datedos = new Date(b.date)  
