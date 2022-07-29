@@ -103,47 +103,47 @@
           v-model="panel"
           multiple
         >
-          <v-scroll-x-transition leave-absolute v-for="(content, data) in typesortedarray" :key="data">
-          <v-expansion-panel>
-            <v-expansion-panel-header>
-              <v-row no-gutters>
-                <v-col cols="4" class="font-weight-bold">
-                  {{new Date(`${data}T12:00:00`).toLocaleDateString('en-US',{weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}}
-                </v-col>
-                <v-col cols="3" class="text--secondary">Number of items: {{content.length}}</v-col>
-              </v-row>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <v-scroll-x-transition v-for="(item) in content" :key="item.id" leave-absolute>
-                <v-card class="mb-2" elevation="5">
-                  <v-sheet dark align="center" :color="setcolor(item)" height="20" width="100%" style="font-size: 11pt;">&nbsp;{{setname(item)}}</v-sheet>
-                  <div class="d-inline-block" style="width:calc(100% - 44px); ">
-                    <v-card-title><vue-markdown>{{item.name}}</vue-markdown></v-card-title>
-                    <v-card-subtitle class="text--secondary">Notes:&nbsp;<vue-markdown>{{item.notes}}</vue-markdown></v-card-subtitle>
-                  </div>
-                  <v-menu transition="scale-transition">
-                    <template v-slot:activator="{on, attrs}">
-                      <v-btn v-bind="attrs" v-on="on" class="d-inline-block mt-2 mr-2 float-right" icon><v-icon>mdi-dots-vertical</v-icon></v-btn>
-                    </template>
-                    <v-list dense>
-                      <v-list-item link @click="deleteitem(item.id)">
-                        <v-list-item-content>
-                          <v-list-item-title><v-icon small color="red">mdi-delete</v-icon>&nbsp;Delete Event</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                      <v-list-item link @click="launchsavedialog(item.id)">
-                        <v-list-item-content>
-                          <v-list-item-title><v-icon small color="blue">mdi-calendar-export</v-icon>&nbsp;Export Event</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
-                  
-                </v-card>
-              </v-scroll-x-transition>
-              
-            </v-expansion-panel-content>
-          </v-expansion-panel>
+          <v-scroll-x-transition v-for="(content, data) in typesortedarray" :key="data">
+            <v-expansion-panel>
+              <v-expansion-panel-header>
+                <v-row no-gutters>
+                  <v-col cols="4" class="font-weight-bold">
+                    {{new Date(`${data}T12:00:00`).toLocaleDateString('en-US',{weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}}
+                  </v-col>
+                  <v-col cols="3" class="text--secondary">Number of items: {{content.length}}</v-col>
+                </v-row>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-scroll-x-transition v-for="item in content" :key="item.id" leave-absolute>
+                  <v-card class="mb-2" elevation="5">
+                    <v-sheet dark align="center" :color="setcolor(item)" height="20" width="100%" style="font-size: 11pt;">&nbsp;{{setname(item)}}</v-sheet>
+                    <div class="d-inline-block" style="width:calc(100% - 44px); ">
+                      <v-card-title><vue-markdown>{{item.name}}</vue-markdown></v-card-title>
+                      <v-card-subtitle class="text--secondary">Notes:&nbsp;<vue-markdown>{{item.notes}}</vue-markdown></v-card-subtitle>
+                    </div>
+                    <v-menu transition="scale-transition">
+                      <template v-slot:activator="{on, attrs}">
+                        <v-btn v-bind="attrs" v-on="on" class="d-inline-block mt-2 mr-2 float-right" icon><v-icon>mdi-dots-vertical</v-icon></v-btn>
+                      </template>
+                      <v-list dense>
+                        <v-list-item link @click="deleteitem(item.id)">
+                          <v-list-item-content>
+                            <v-list-item-title><v-icon small color="red">mdi-delete</v-icon>&nbsp;Delete Event</v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item link @click="launchsavedialog(item.id)">
+                          <v-list-item-content>
+                            <v-list-item-title><v-icon small color="blue">mdi-calendar-export</v-icon>&nbsp;Export Event</v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
+                    
+                  </v-card>
+                </v-scroll-x-transition>
+                
+              </v-expansion-panel-content>
+            </v-expansion-panel>
           </v-scroll-x-transition>
         </v-expansion-panels>
 
