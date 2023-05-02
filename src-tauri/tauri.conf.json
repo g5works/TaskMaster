@@ -4,9 +4,9 @@
     "version": "1.0.0"
   },
   "build": {
-    "distDir": "Set automatically by Vue CLI plugin",
-    "devPath": "Set automatically by Vue CLI plugin",
-    "beforeDevCommand": "",
+    "distDir": "../public",
+    "devPath": "http://localhost:8080",
+    "beforeDevCommand": "npm run serve",
     "beforeBuildCommand": "",
     "withGlobalTauri": true
   },

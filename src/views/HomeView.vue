@@ -68,6 +68,7 @@
             <v-list-item-title>Import event</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        
       </v-list>
     </v-navigation-drawer>
 
@@ -163,6 +164,10 @@
                       <v-card outlined class="pa-1" link @click="launchopendialog()">
                         <v-card-title><v-icon>mdi-calendar-import</v-icon>&nbsp;Import an event file</v-card-title>
                       </v-card>
+                      <br>
+                      <v-card outlined class="pa-1" link @click="canvasadd = !canvasadd">
+                        <v-card-title><v-icon>mdi-calendar-import</v-icon>&nbsp;Import from Canvas</v-card-title>
+                      </v-card>
                     </div>
                   </v-fade-transition>
 
@@ -244,6 +249,47 @@
                     </v-card>
                   </v-dialog>
 
+                  <v-dialog v-model="canvasadd" width="600">
+                    <v-card>
+                      <v-card-title class="text-h5 blue" style="color:white;">Canvas Accounts</v-card-title>
+                      <!-- <v-btn class="text-h5 blue" style="color:white;">Canvas Accounts</v-btn> -->
+                      <v-btn block color="blue" @click="login = !login">Log into new Canvas instance</v-btn>
+                      <v-container>
+                        <v-card v-for="log in logins" :key="log.id">
+                          <v-card-title>{{ log.url }}</v-card-title>
+                          <!-- <v-card-subtitle>{{ log.token }}</v-card-subtitle> -->
+                        </v-card>
+                      </v-container>
+                      <v-card-actions>
+                        <v-spacer/>
+                          <v-btn text color="blue" @click="canvasadd=false">OK</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+
+                  <v-dialog v-model="login" width="600">
+                    <v-card>
+                      <v-card-title class="text-h5 blue" style="color:white;">Log into Canvas</v-card-title>
+                      <!-- <v-btn class="text-h5 blue" style="color:white;">Canvas Accounts</v-btn> -->
+                      <v-btn block color="blue" @click="login = !login">Log into new Canvas instance</v-btn>
+                      <v-container>
+                        <span style="color: gray; font-size: 10pt">
+                          <p>To log into canvas you need these 2 things.</p>
+
+                          <p>You can get the first by looking at the URL that you go to when you are in Canvas</p>
+                          <p>Get the other by going to your Profile > Settings > Scroll Down > Integrations</p>
+                        </span>
+                        <v-text-field v-model="schoolurl" placeholder="Input school Canvas URL"></v-text-field>
+                        <v-text-field v-model="canvastoken" placeholder="Input Canvas auth token"></v-text-field>
+                      </v-container>
+                      <v-card-actions>
+                        <v-spacer/>
+                          <v-btn text color="red" @click="login=false">cancel</v-btn>
+                          <v-btn text color="blue" @click="savelogin(schoolurl, canvastoken)" >Log in</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+
 
                 </v-col>
             </v-row>
@@ -293,11 +339,17 @@ export default Vue.extend({
       menu: false,
       nohashwindow: false,
       datas: [],
+      canvasadd: false,
+      login: false,
+      logins: [],
 
       eventname: undefined,
       date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       notes: undefined,
       type: undefined,
+
+      schoolurl: "",
+      canvastoken: "",
     }
   },
 
@@ -322,6 +374,14 @@ export default Vue.extend({
   },
 
   methods:{
+    savelogin(url, key) {
+      this.login = false
+      this.logins.push({id:uuidv4(), token: key, url: url})
+      localStorage.logins = this.logins
+      console.log(localStorage.logins)
+      this.schoolurl = ""
+      this.canvastoken = ""
+    },
 
     launchopendialog(){
       tauri.dialog.open().then((value) => {tauri.fs.readTextFile(value).then((val)=>{
@@ -432,6 +492,12 @@ export default Vue.extend({
           }
         })
       })
+      if (localStorage.logins) {
+        this.logins = localStorage.logins
+      }
+      else {
+        this.logins = []
+      }
   },
 
   computed: {
