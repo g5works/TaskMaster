@@ -85,7 +85,7 @@
       <v-divider></v-divider>
       <v-container fluid>
 
-        <v-card v-for="(item, index) in prioritysortedarray" class="mb-2" :key="index">
+        <v-card v-for="(item) in prioritysortedarray" class="mb-2" :key="item.id">
           <v-sheet dark align="center" :color="setcolor(item)" height="20" width="50%" style="font-size: 11pt;" class="d-inline-block rounded-tr-0">{{setname(item)}}</v-sheet>
           <v-sheet dark align="center" :color="updateduein(item)[1]" height="20" width="50%" style="font-size:11pt;" class="d-inline-block rounded-tr">{{updateduein(item)[0]}}</v-sheet>
           <v-card-title><vue-markdown>{{item.name}}</vue-markdown></v-card-title>
@@ -257,7 +257,13 @@
                       <v-container>
                         <v-card v-for="log in logins" :key="log.id">
                           <v-card-title>{{ log.url }}</v-card-title>
-                          <!-- <v-card-subtitle>{{ log.token }}</v-card-subtitle> -->
+                          <v-card-actions>
+                            <div style="margin-left: auto">
+                              <v-btn color="blue" text @click="deletelogin(log)"><v-spacer/>open</v-btn>
+                              <v-btn color="red"  text @click="deletelogin(log)"><v-spacer/>delete login</v-btn>
+                            </div>
+
+                          </v-card-actions>
                         </v-card>
                       </v-container>
                       <v-card-actions>
@@ -271,7 +277,6 @@
                     <v-card>
                       <v-card-title class="text-h5 blue" style="color:white;">Log into Canvas</v-card-title>
                       <!-- <v-btn class="text-h5 blue" style="color:white;">Canvas Accounts</v-btn> -->
-                      <v-btn block color="blue" @click="login = !login">Log into new Canvas instance</v-btn>
                       <v-container>
                         <span style="color: gray; font-size: 10pt">
                           <p>To log into canvas you need these 2 things.</p>
@@ -343,9 +348,9 @@ export default Vue.extend({
       login: false,
       logins: [],
 
-      eventname: undefined,
+      eventname: "",
       date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-      notes: undefined,
+      notes: "",
       type: undefined,
 
       schoolurl: "",
@@ -377,10 +382,16 @@ export default Vue.extend({
     savelogin(url, key) {
       this.login = false
       this.logins.push({id:uuidv4(), token: key, url: url})
-      localStorage.logins = this.logins
+      localStorage.setItem("logins", `${JSON.stringify(this.logins)}`)
       console.log(localStorage.logins)
       this.schoolurl = ""
       this.canvastoken = ""
+    },
+
+    deletelogin(data) {
+      
+      this.logins.splice(this.logins.indexOf(data), 1)
+      localStorage.setItem("logins", `${JSON.stringify(this.logins)}`)
     },
 
     launchopendialog(){
@@ -492,11 +503,10 @@ export default Vue.extend({
           }
         })
       })
-      if (localStorage.logins) {
-        this.logins = localStorage.logins
-      }
-      else {
-        this.logins = []
+      
+      if (localStorage.getItem("logins")) {
+        this.logins = JSON.parse(localStorage.getItem("logins"))
+        console.log(localStorage.getItem("logins"))
       }
   },
 
@@ -516,7 +526,8 @@ export default Vue.extend({
     },
     prioritysortedarray(){ 
       var sortedarray = [...this.datas].sort((a, b) => {return a.type - b.type})
-      return [...sortedarray].sort((a, b) => {
+
+      var sorteddata = [...sortedarray].sort((a, b) => {
         
         var today = new Date()
         var dateuno = new Date(a.date)
@@ -524,6 +535,10 @@ export default Vue.extend({
 
         return Math.ceil((dateuno.getTime()-today.getTime())/(1000 * 3600 * 24))*a.type - Math.ceil((datedos.getTime()-today.getTime())/(1000 * 3600 * 24))*b.type
       })
+
+      console.log(sorteddata)
+
+      return sorteddata
     },
   }
 });
