@@ -17,6 +17,7 @@
     "@tauri-apps/cli": "^1.0.0",
     "@vue/cli": "^5.0.4",
     "@vue/devtools": "^6.1.4",
+    "axios": "^1.4.0",
     "core-js": "^3.8.3",
     "fs-extra": "^10.1.0",
     "global": "^4.4.0",

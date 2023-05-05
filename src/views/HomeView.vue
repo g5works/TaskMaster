@@ -259,7 +259,7 @@
                           <v-card-title>{{ log.url }}</v-card-title>
                           <v-card-actions>
                             <div style="margin-left: auto">
-                              <v-btn color="blue" text @click="deletelogin(log)"><v-spacer/>open</v-btn>
+                              <v-btn color="blue" text @click="classes = !classes"><v-spacer/>open</v-btn>
                               <v-btn color="red"  text @click="deletelogin(log)"><v-spacer/>delete login</v-btn>
                             </div>
 
@@ -269,6 +269,21 @@
                       <v-card-actions>
                         <v-spacer/>
                           <v-btn text color="blue" @click="canvasadd=false">OK</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+
+                  <v-dialog v-model="classes" width="600">
+                    <v-card>
+                      <v-card-title class="text-h5 blue" style="color:white;">Your Classes</v-card-title>
+                      <!-- <v-btn class="text-h5 blue" style="color:white;">Canvas Accounts</v-btn> -->
+
+                      <v-container>
+                        
+                      </v-container>
+                      <v-card-actions>
+                        <v-spacer/>
+                        <v-btn text color="blue" @click="classes=false">OK</v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -318,6 +333,7 @@ import * as tauri from "@tauri-apps/api";
 import * as tauriFSExtra from "tauri-plugin-fs-extra-api"
 import md5 from "md5";
 import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
 
 Vue.use(underscore);
 
@@ -355,6 +371,9 @@ export default Vue.extend({
 
       schoolurl: "",
       canvastoken: "",
+
+      classes: false,
+
     }
   },
 
@@ -487,6 +506,8 @@ export default Vue.extend({
   },
 
   beforeMount(){
+      axios.defaults.headers.common['Authorization'] = 'Bearer 12610~EKnE919MGFyTcd2j2HP3iqXwF1E9gbebqiDz802SqyeL8PSFDOt08bBz5pdtNH3a';
+      axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
       tauri.fs.readTextFile("TaskMaster/user.json", {dir: tauri.fs.BaseDirectory.Data}).then((val) => {
       var jsonc = JSON.parse(val)
       this.datas = jsonc
@@ -504,6 +525,10 @@ export default Vue.extend({
         })
       })
       
+      axios.get("/canvas/courses").then(resp => {
+        console.log(resp)
+      })
+
       if (localStorage.getItem("logins")) {
         this.logins = JSON.parse(localStorage.getItem("logins"))
         console.log(localStorage.getItem("logins"))

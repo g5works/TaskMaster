@@ -4,7 +4,12 @@ module.exports = defineConfig({
     'vuetify'
   ],
   devServer: {
-    host: 'localhost'
+    host: 'localhost',
+    proxy: {
+      '^/canvas': {
+        target: 'pwcs.instructure.com/api/v1',
+      }
+    },
   },
   outputDir: 'src-tauri/target/webpack_dist'
 })
